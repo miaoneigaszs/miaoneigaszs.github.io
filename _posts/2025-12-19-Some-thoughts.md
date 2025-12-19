@@ -10,7 +10,7 @@ tags:
   - 生活
   - 心情
 toc : true
-toc_label: "Categories"
+toc_label: "目录"
 toc_icon: "cog"
 toc_sticky: true
 ---
