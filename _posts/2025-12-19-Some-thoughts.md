@@ -16,23 +16,14 @@ toc_sticky: true
 ---
 
 
-** 人生需要准备的,不是昂贵的茶,而是喝茶的心情. **  
+> 人生需要准备的,不是昂贵的茶,而是喝茶的心情.
+> <cite>林清玄</cite>   
 
-##  尝试插入代码:
-```python
-import streamlit as st
+## 起因
+最近学习Agent开发相关的知识,一是因为研究生导师的研究方向是Multi-Agent安全,二是我想找Agent开发相关的实习.
+故在Github上找了一个项目名为[awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps),里面包含了从易到难的Agent开发项目,我看着挺有趣的.
+但是,我自认为我的效率很低,看小红书上很多人都发找到实习的分享,也只用了一个多月的时间,我就有种紧迫感,在想着自己怎么才能快速成长的时候,就会思考一些东西.刚好想到博客可以记录一些二三事,所以就有了这篇文章和这个网站.
 
-st.title("Hello, Streamlit!")
-```
-## 尝试插入链接
-[关于我]({{site.baseurl}}/about/)
-[google](https://www.google.com)
-## 提示块
-**注意：** 这里的缩进很重要。
-{: .notice--warning}
+## 一些想法
 
-**提示：** 这是一个小技巧。
-{: .notice--info}
-**警告：** 这里有危险的操作。
-{: .notice--danger}
 
