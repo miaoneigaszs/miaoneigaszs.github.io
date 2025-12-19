@@ -1,5 +1,5 @@
 ---
 title: "My information"
 layout: splash
-permalink: /splash/
+permalink: /showcase/
 ---

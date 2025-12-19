@@ -60,7 +60,7 @@ plugins:
 author:
   name   : "Cln_Nagisa"
   avatar : "/assets/images/Young.jpg"
-  bio    : "My awesome biography constrained to a sentence or two goes here."
+  bio    : "修身的小白"
   links:
     - label: "Website"
       icon: "fas fa-fw fa-link"
