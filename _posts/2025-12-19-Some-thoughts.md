@@ -1,8 +1,7 @@
 ---
 title: "一些想法"
-excerpt: """
-人生需要准备的,不是昂贵的茶,而是喝茶的心情. 
-"""
+excerpt: >
+  人生需要准备的,不是昂贵的茶,而是喝茶的心情. 
 last_modified_at: 2025-12-19
 
 categories:
