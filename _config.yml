@@ -1,12 +1,12 @@
 # 网站基本信息
-title: "我的AI学习之路"
+title: "我的学习小屋"
 tagline: "记录LLM Agent开发学习"
 description: "分享大模型应用、Agent开发的学习笔记和项目经验"
 url: "https://miaoneigaszs.github.io"
 
 # 个人信息（可以用化名）
 author:
-  name: "Your Nickname"  # 不用真名
+  name: "Calena"  # 不用真名
   email: ""  # 可以不填
   links:
     - label: "GitHub"
