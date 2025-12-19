@@ -1,27 +1,15 @@
-# 网站基本信息
-title: "我的学习小屋"
-tagline: "记录LLM Agent开发学习"
-description: "分享大模型应用、Agent开发的学习笔记和项目经验"
-url: "https://miaoneigaszs.github.io"
+# 1. 网站标题
+title: "Cln_Nagisa"  # 这里可以填你喜欢的名字，支持下划线，这是显示在浏览器标签页上的
+name: "Cln_Nagisa"   # 你的署名
 
-# 个人信息（可以用化名）
-author:
-  name: "Calena"  # 不用真名
-  email: ""  # 可以不填
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/miaoneigaszs"
+# 2. 描述
+description: "这里写一段关于你自己的简介"
 
-# 隐私保护
-timezone: Asia/Shanghai
-lang: zh-CN
+# 3. 关键的 URL 设置（重要！）
+# 因为你的域名还没生效，我们先填 GitHub 的默认地址，确保网站能跑起来。
+# 等明天域名生效了，我们再回来改这一行。
+url: "https://miaoneigaszs.github.io" 
+baseurl: ""  
 
-# 评论功能（建议关闭或用匿名的）
-comments:
-  provider: false  # 或使用 "giscus"（需要公开repo）
-
-# Google Analytics（可选，建议开启来追踪访问）
-analytics:
-  google:
-    id: ""  # 暂时留空，后面可以加
+# 4. 语言设置（可选）
+locale: "zh-CN" # 改成中文，这样日期的显示格式更符合习惯
