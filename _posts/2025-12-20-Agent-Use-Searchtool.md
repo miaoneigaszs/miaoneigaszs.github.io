@@ -36,11 +36,9 @@ for chunk in response:
     if chunk.content:
         print(chunk.content)
 ```
-
-演示效果：
-{: .notice--info} 
-
-![演示图片](/assets/images/agent-search-tool.png)
+{: .notice--info}
+**演示效果**：
+[![演示图片](/assets/images/agent-search-tool.png)](/assets/images/agent-search-tool.png)
 
 <details markdown="1">
 <summary>点击此处查看源码</summary>
