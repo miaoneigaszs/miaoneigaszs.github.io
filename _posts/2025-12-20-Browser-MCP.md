@@ -13,7 +13,7 @@ toc_icon: "cog"
 我搭建了一个可以用自然语言来控制浏览器的Agent，其中使用了MCP工具playwright，使用mcp_agent来搭建client，使用的工具不再需要和客户端绑定，使用起来更加安全、灵活。
 {: .notice--primary}
 
-这篇博客还将介绍有关MCP的基础知识 
+这篇博客还将介绍有关MCP的基础知识
 {: .notice--info} 
 
 ## 什么是MCP
