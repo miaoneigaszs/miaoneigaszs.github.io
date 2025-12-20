@@ -23,7 +23,7 @@ excerpt: "本文介绍如何使用 Python 和 Playwright 搭建一个支持自�
 ## 演示视频
 
 <video width="100%" controls>
-  <source src="/assets/videos/browser-agent-demo.mp4" type="video/mp4">
+  <source src="/assets/videos/MCP-Browser.mp4" type="video/mp4">
   您的浏览器不支持 Video 标签。
 </video>
 
