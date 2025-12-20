@@ -37,11 +37,12 @@ for chunk in response:
         print(chunk.content)
 ```
 
-{: .notice--info}演示效果：
+演示效果：
+{: .notice--info} 
 
-![演示图片](/assets/images/agent-search-tool.png){: .align-center}
+![演示图片](/assets/images/agent-search-tool.png)
 
-<details>
+<details markdown="1">
 <summary>点击此处查看源码</summary>
 
 ```python
