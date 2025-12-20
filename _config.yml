@@ -63,10 +63,10 @@ author:
   bio    : "修身的小白"
   links:
     - label: "Bilibili"
-      icon: "fas fa-fw fa-bilibili"
+      icon: "fab fa-fw fa-bilibili"
       url: "https://space.bilibili.com/1931126812?spm_id_from=333.1007.0.0"
     - label: "CSDN"
-      icon: "fab fa-fw fa-csdn"
+      icon: "fas fa-fw fa-code"
       url: "https://blog.csdn.net/happy_5553?spm=1000.2115.3001.5343"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
