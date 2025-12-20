@@ -22,16 +22,16 @@ toc_sticky: true
 
 ## 起因
 
-**为什么开始做这个？**
-{: .notice--info}
+最近开始学习 **Agent 开发** 相关的知识，主要有两个契机：
 
-最近学习 Agent 开发相关的知识，一是因为研究生导师的研究方向是 **Multi-Agent 安全**，二是我本身想找相关实习。
+1.  **导师方向**：研究生导师的研究方向是 Multi-Agent 安全。
+2.  **求职需求**：我想找 Agent 开发相关的实习。
 
-我在 Github 上发现了一个很棒的项目：[awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps)。
+为此，我在 Github 上找了一个名为 [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) 的项目，里面包含了从易到难的 Agent 开发项目，非常有趣。
 
-**我的焦虑与思考**
-{: .notice--warning}
-
-看小红书上大家一个月就能找到实习，**我感到了紧迫感**。为了倒逼自己快速成长，我决定用博客记录下这些二三事。
+### 碎碎念
+> 但是，我自认为效率很低。看小红书上很多人只用了一个多月就找到了实习，我顿时有种紧迫感。
+> 
+> 在思考“怎么才能快速成长”的时候，刚好想到可以用博客记录二三事，于是就有了这篇文章和这个网站。
 
 
