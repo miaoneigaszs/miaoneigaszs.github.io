@@ -18,6 +18,6 @@ toc_icon: "cog"
 **MCP**（Model Context Protocol, 模型上下文协议），是Anthropic公司在2024年11月推出的开放标准协议，目的是规范LLM与外部工具、系统和数据源之间交互的方式。它提供了一种统一的接口，用于读取文件、执行函数和处理上下文提示。（<a href="https://en.wikipedia.org/wiki/Model_Context_Protocol" target="_blank">wikipedia</a>）目前，基本上所有的主流模型都支持MCP。
 
 这张图示可以更清晰理解MCP的概念：
-![MCP](/assets/images/What's-MCP.avif)
+[![MCP](/assets/images/What's-MCP.avif)](/assets/images/What's-MCP.avif)
 
 MCP
