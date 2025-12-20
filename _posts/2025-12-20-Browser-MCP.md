@@ -5,10 +5,10 @@ categories:
 tags:
   - MCP
   - Browser
-toc: true
-toc_sticky: true
-toc_label: "目录"
-toc_icon: "cog"
+# toc: true
+# toc_sticky: true
+# toc_label: "目录"
+# toc_icon: "cog"
 ---
 我做了一个能“听懂人话”的浏览器 Agent！它利用 MCP 协议连接了 LLM 和 Playwright。最大的收获是理解了 MCP 的解耦思想——工具运行在独立的服务端，不再硬编码在客户端里，这让整个系统变得更加安全和灵活。
 {: .notice--primary}
