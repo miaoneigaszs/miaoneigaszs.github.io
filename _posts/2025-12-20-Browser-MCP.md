@@ -22,9 +22,14 @@ toc_icon: "cog"
 这张图示可以更清晰理解MCP的概念：
 
 [![MCP](/assets/images/What's-MCP.avif)](/assets/images/What's-MCP.avif)
+*图 1：MCP 架构示意图*
+{: .text-center .caption}
 
 这个动图显示了MCP的优势：
-[![MCP-gif](../assets/images/What%20is%20MCP.gif)](../assets/images/What%20is%20MCP.gif)
+[![MCP-gif](/assets/images/What%20is%20MCP.gif)](/assets/images/What%20is%20MCP.gif)
+*图 2：MCP 优势*
+{:.text-center .caption}
+
 ## MCP架构和组件
 
 MCP架构由三部分组成：
