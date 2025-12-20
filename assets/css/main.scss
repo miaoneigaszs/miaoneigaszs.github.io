@@ -6,34 +6,34 @@
 
 /* 1. 先引入主题原本的样式 (这行代码至关重要，不要删) */
 @import "minimal-mistakes"; 
+body { background-color: red !important; }
+// /* --------------------------------------
+//    2. 在下面写你的自定义样式，它会覆盖上面的默认样式
+//    -------------------------------------- */
 
-/* --------------------------------------
-   2. 在下面写你的自定义样式，它会覆盖上面的默认样式
-   -------------------------------------- */
+// /* 比如把目录改成极简风（透明背景） */
+// .sidebar .toc {
+//     background-color: transparent !important;
+//     border: none !important;
+//     box-shadow: none !important;
+// }
 
-/* 比如把目录改成极简风（透明背景） */
-.sidebar .toc {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
+// .sidebar .toc .nav__title {
+//     background: transparent !important;
+//     color: #333;
+//     font-size: 1.2em;
+//     border-bottom: 2px solid #f2f3f3;
+// }
 
-.sidebar .toc .nav__title {
-    background: transparent !important;
-    color: #333;
-    font-size: 1.2em;
-    border-bottom: 2px solid #f2f3f3;
-}
+// .sidebar .toc .nav__list a {
+//     color: #777;
+//     padding-left: 10px;
+//     border-left: 2px solid transparent;
+//     transition: all 0.2s;
+// }
 
-.sidebar .toc .nav__list a {
-    color: #777;
-    padding-left: 10px;
-    border-left: 2px solid transparent;
-    transition: all 0.2s;
-}
-
-.sidebar .toc .nav__list a:hover {
-    color: #2a7ae2;
-    border-left: 2px solid #2a7ae2;
-    background-color: #f9f9f9;
-}
+// .sidebar .toc .nav__list a:hover {
+//     color: #2a7ae2;
+//     border-left: 2px solid #2a7ae2;
+//     background-color: #f9f9f9;
+// }
