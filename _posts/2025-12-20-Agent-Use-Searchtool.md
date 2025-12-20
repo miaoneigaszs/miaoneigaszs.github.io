@@ -1,5 +1,5 @@
 ---
-title: Agent Use Search Tool
+title: Agent Using Search Tool
 
 categories:
   - Simple Agent
