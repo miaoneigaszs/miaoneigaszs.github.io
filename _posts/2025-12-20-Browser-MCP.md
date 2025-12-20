@@ -25,11 +25,6 @@ toc_icon: "cog"
 *图 1：MCP 架构示意图*
 {: .text-center .caption}
 
-这个动图显示了MCP的优势：
-[![MCP-gif](/assets/images/What%20is%20MCP.gif)](/assets/images/What%20is%20MCP.gif)
-*图 2：MCP 优势*
-{:.text-center .caption}
-
 ## MCP架构和组件
 
 MCP架构由三部分组成：
@@ -46,5 +41,28 @@ MCP架构由三部分组成：
    - 资源（Resources）：可供大模型访问的数据和内容（如文档、结构化数据等）
    - 提示词（Prompts）：用于生成特定类型的工作流或可重用模板
 
-## MCP的工作原理
+## MCP的工作原理：通信协议
+MCP定义了客户端与服务器之间通信的标准化流程，该流程涉及几个关键阶段：
+1. 能力交换
+   - 请求：客户端询问服务器具备哪些能力
+   - 响应：服务端提供有关工具、资源和提示词的详细信息
+   - 通知：客户端确认连接成功
+2. 消息交换
+   - 客户端处理用户问题，选择特定工具，向服务器发送请求
+   - 服务器处理请求，生成响应并发送给客户端
+   - 根据响应，客户端可以选择继续发送请求，或结束交互
+
+
+[![MCP-communication-protocol](/assets/images/MCP-stages.gif)](/assets/images/MCP-stages.gif)
+*图 2：MCP 通信协议*
+{:.text-center .caption}
+
+## MCP的优势
+MCP的优势其实也要看应用场景，我个人觉得我还在开发中，目前只接触了最简单的MCP应用场景，但是体验到其最大的优势是提供了更通用的接口，通过MCP，开发的工具可以被各种应用使用，并且这种隔离式的架构保障了主程序的安全
+
+下面是一个交互动图：
+
+[![MCP-gif](/assets/images/What%20is%20MCP.gif)](/assets/images/What%20is%20MCP.gif)
+*图 2：MCP 作用及优势*
+{:.text-center .caption}
 
