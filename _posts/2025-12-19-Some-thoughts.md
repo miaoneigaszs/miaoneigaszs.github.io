@@ -21,10 +21,17 @@ toc_sticky: true
 > <cite>林清玄</cite>   
 
 ## 起因
-最近学习Agent开发相关的知识,一是因为研究生导师的研究方向是Multi-Agent安全,二是我想找Agent开发相关的实习.
-故在Github上找了一个项目名为[awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps),里面包含了从易到难的Agent开发项目,我看着挺有趣的.
-但是,我自认为我的效率很低,看小红书上很多人都发找到实习的分享,也只用了一个多月的时间,我就有种紧迫感,在想着自己怎么才能快速成长的时候,就会思考一些东西.刚好想到博客可以记录一些二三事,所以就有了这篇文章和这个网站.
 
-## 一些想法
+**为什么开始做这个？**
+{: .notice--info}
+
+最近学习 Agent 开发相关的知识，一是因为研究生导师的研究方向是 **Multi-Agent 安全**，二是我本身想找相关实习。
+
+我在 Github 上发现了一个很棒的项目：[awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps)。
+
+**我的焦虑与思考**
+{: .notice--warning}
+
+看小红书上大家一个月就能找到实习，**我感到了紧迫感**。为了倒逼自己快速成长，我决定用博客记录下这些二三事。
 
 
