@@ -1,5 +1,5 @@
 ---
-title: "Browser MCP"
+title: "MCP Introduction"
 categories:
   - MCP
 tags:
