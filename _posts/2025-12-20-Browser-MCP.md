@@ -107,7 +107,7 @@ openai:
 以下是基于 Streamlit 实现的完整 Python 代码。它实现了界面的渲染、Agent 的异步初始化以及指令的执行。
 
 <!-- 使用 details 标签来折叠长代码 -->
-<details>
+<details markdown="1">
 <summary><strong>📄 点击展开/折叠：完整 Python 实现代码 (main.py)</strong></summary>
 
 ```python
