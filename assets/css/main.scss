@@ -1,39 +1,33 @@
-// ---
-// # Only the main Sass file needs front matter (the dashes are enough)
-// ---
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
 
-// @charset "utf-8";
+@charset "utf-8";
 
-// /* 1. 先引入主题原本的样式 (这行代码至关重要，不要删) */
-// @import "minimal-mistakes"; 
+@import "minimal-mistakes"; # 引入主题默认样式
 
-/* --------------------------------------
-   2. 在下面写你的自定义样式，它会覆盖上面的默认样式
-   -------------------------------------- */
+/* --- 自定义样式区域 --- */
 
-// /* 比如把目录改成极简风（透明背景） */
-// .sidebar .toc {
-//     background-color: transparent !important;
-//     border: none !important;
-//     box-shadow: none !important;
-// }
+/* 设置粒子容器的样式，让它固定在屏幕最底层 */
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #000000; /* 背景底色：纯黑 */
+  background-image: radial-gradient(circle, #1a1a2e 0%, #000000 100%); /* 可选：加个微弱的深蓝渐变 */
+  z-index: -10; /* 放在最底层 */
+}
 
-// .sidebar .toc .nav__title {
-//     background: transparent !important;
-//     color: #333;
-//     font-size: 1.2em;
-//     border-bottom: 2px solid #f2f3f3;
-// }
+/* 为了让背景透出来，需要把主题默认的白色/灰色背景去掉 */
+body, .initial-content, .page__content {
+    background-color: transparent !important;
+}
 
-// .sidebar .toc .nav__list a {
-//     color: #777;
-//     padding-left: 10px;
-//     border-left: 2px solid transparent;
-//     transition: all 0.2s;
-// }
-
-// .sidebar .toc .nav__list a:hover {
-//     color: #2a7ae2;
-//     border-left: 2px solid #2a7ae2;
-//     background-color: #f9f9f9;
-// }
+/* 调整一下侧边栏的透明度，让它看起来更融合 */
+.sidebar {
+    background-color: rgba(30, 30, 40, 0.8) !important;
+    backdrop-filter: blur(5px); /* 毛玻璃效果，不需要可删掉 */
+    border-radius: 10px;
+}
