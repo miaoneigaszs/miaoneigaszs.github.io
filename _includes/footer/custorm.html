@@ -1,0 +1,85 @@
+<!-- Blue Archive Live2D Widget -->
+<script src="https://unpkg.com/oh-my-live2d@latest"></script>
+
+<script>
+  OML2D.loadOml2d({
+    models: [
+      {
+        // Arona（Blue Archive）
+        path: "https://model.oml2d.com/Arona-Blue_Archive/model.json",
+
+        // 尺寸（原来 0.08 略小）
+        scale: 0.11,
+
+        // 位置：右下角更符合博客直觉
+        position: [20, 80],
+
+        stageStyle: {
+          width: 360,
+          height: 480
+        }
+      }
+    ],
+
+    /* ================= 提示框 ================= */
+    tips: {
+      style: {
+        width: 240,
+        height: 130,
+        left: "calc(50% - 120px)",
+        top: "-70px"
+      },
+
+      idleTips: {
+        wordTheDay: true, // 显示一言
+        interval: 15000, // 15 秒一句，别太吵
+        message: [
+          "欢迎来到老师的博客~",
+          "Arona 会一直在这里陪着你。",
+          "今天的内容看起来很有趣呢！",
+          "要不要稍微休息一下？"
+        ]
+      },
+
+      // 交互提示
+      hoverTips: {
+        message: [
+          "诶？你在看我吗？",
+          "老师，这样盯着我会害羞的……"
+        ]
+      },
+
+      clickTips: {
+        message: [
+          "欸？！被点到了！",
+          "嘿嘿，被老师发现啦~",
+          "有什么我能帮忙的吗？"
+        ]
+      }
+    },
+
+    /* ================= 菜单栏 ================= */
+    menus: {
+      items: [
+        {
+          id: "Rest",
+          icon: "icon-rest",
+          title: "休息一下"
+        },
+        {
+          id: "SwitchModel",
+          icon: "icon-switch",
+          title: "切换角色"
+        },
+        {
+          id: "About",
+          icon: "icon-about",
+          title: "关于 Arona",
+          onClick: () => {
+            alert("Arona 是老师的专属看板娘哦！");
+          }
+        }
+      ]
+    }
+  });
+</script>
