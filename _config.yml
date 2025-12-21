@@ -60,7 +60,7 @@ plugins:
 author:
   name   : "Cln_Nagisa"
   avatar : "/assets/images/Young.jpg"
-  bio    : "修身的小白"
+  bio    : "探索技术与生活边界的笔记本"
   links:
     - label: "Bilibili"
       icon: "fab fa-fw fa-bilibili"
