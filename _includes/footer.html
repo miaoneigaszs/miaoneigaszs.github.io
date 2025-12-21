@@ -1,0 +1,35 @@
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    {% if site.data.ui-text[site.locale].follow_label %}
+      <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
+    {% endif %}
+
+    {% if site.footer.links %}
+      {% for link in site.footer.links %}
+        {% if link.label and link.url %}
+          <li><a href="{{ link.url }}" rel="nofollow noopener noreferrer"><i class="{{ link.icon | default: 'fas fa-link' }}" aria-hidden="true"></i> {{ link.label }}</a></li>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <li><a href="{{ '/feed.xml' | relative_url }}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">
+  &copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. 
+  Designed by <a href="https://github.com/miaoneigaszs">Cln_Nagisa</a>.
+
+  <br>
+  <span style="font-size: 0.8em; color: #888;">
+    <span id="busuanzi_container_site_pv">
+      <i class="fas fa-eye"></i> 本站总访问量: <span id="busuanzi_value_site_pv"></span> 次
+    </span>
+    &nbsp;|&nbsp;
+    <span id="busuanzi_container_site_uv">
+      <i class="fas fa-user"></i> 访客数: <span id="busuanzi_value_site_uv"></span> 人
+    </span>
+  </span>
+</div>
