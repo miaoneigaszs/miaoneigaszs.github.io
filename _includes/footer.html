@@ -24,13 +24,27 @@
 
   <br>
   <span style="font-size: 0.8em; color: #888;">
-    <span id="busuanzi_container_site_pv", style="color: #ffffff;opacity: 0.8;">
+    <span id="busuanzi_container_site_pv" style="display:none; color: #ffffff; opacity: 0.8;">
       <i class="fas fa-eye"></i> 本站总访问量: <span id="busuanzi_value_site_pv"></span> 次
     </span>
     &nbsp;|&nbsp;
-    <span id="busuanzi_container_site_uv", style="color: #ffffff;opacity: 0.8;">
+    <span id="busuanzi_container_site_uv" style="display:none; color: #ffffff; opacity: 0.8;">
       <i class="fas fa-user"></i> 访客数: <span id="busuanzi_value_site_uv"></span> 人
     </span>
   </span>
 </div>
 
+<script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+
+<style>
+  /* 修复：防止看板娘被页面的其他元素遮挡，强制层级最高 */
+  #waifu {
+    z-index: 9999 !important;
+  }
+  /* 优化：移动端屏幕太小，建议隐藏看板娘，以免影响阅读 */
+  @media (max-width: 768px) {
+    #waifu {
+      display: none;
+    }
+  }
+</style>
