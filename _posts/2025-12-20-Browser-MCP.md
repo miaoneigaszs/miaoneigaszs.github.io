@@ -6,7 +6,7 @@ categories:
 tags:
   - MCP
   - Browser
-data: 2025-12-20 17:00:00
+data: 2025-12-20 17:00:00 +0800
 toc: true
 toc_sticky: true
 toc_label: "文章目录"
