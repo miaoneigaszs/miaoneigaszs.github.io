@@ -307,5 +307,5 @@ st.write("Built with Streamlit, Playwright, and [MCP-Agent](https://www.github.c
 1. **解耦与安全**：工具（Playwright）运行在独立的 Node.js 进程中，与我的 Python 主程序分离。即便工具崩溃或受到攻击，也不会直接影响主进程的环境。
 2. **灵活性**：我不需要在 Python 代码里硬编码浏览器操作的逻辑，只需要通过协议发送“意图”，由 Server 去执行具体的脏活累活。
 
-这种不再与客户端强绑定的工具调用方式，正是未来 AI Agent 开发的主流方向。
+这种不再与客户端强绑定的工具调用方式，正是未来 AI Agent 开发的主流方向。（这篇文章比较长，我借助了LLM帮我写了初稿，后续会继续完善。）
 {: .notice--primary}
