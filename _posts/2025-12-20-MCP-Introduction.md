@@ -4,7 +4,7 @@ categories:
   - MCP
 tags:
   - MCP
-  - Browser
+data: 2025-12-20 12:00:00
 toc: true
 toc_sticky: true
 toc_label: "目录"
