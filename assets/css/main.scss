@@ -6,28 +6,31 @@
 
 @import "minimal-mistakes"; /* 引入主题默认样式 */
 
-/* --- 自定义样式区域 --- */
+/* --- 自定义样式区域 (赛博朋克网格) --- */
 
-/* 设置粒子容器的样式，让它固定在屏幕最底层 */
-#particles-js {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background-color: #000000; /* 背景底色：纯黑 */
-  background-image: radial-gradient(circle, #1a1a2e 0%, #000000 100%); /* 可选：加个微弱的深蓝渐变 */
-  z-index: -10; /* 放在最底层 */
+body {
+  /* 深色背景底色 */
+  background-color: #050505 !important;
+  /* 利用 CSS 渐变画出网格线 */
+  background-image: 
+    linear-gradient(rgba(0, 128, 255, 0.2) 1px, transparent 1px), /* 横线，淡淡的蓝色 */
+    linear-gradient(90deg, rgba(0, 128, 255, 0.2) 1px, transparent 1px) !important; /* 竖线 */
+  /* 网格大小 */
+  background-size: 40px 40px !important;
+  background-position: center center;
+  /* 让背景固定，滚动时产生景深感 */
+  background-attachment: fixed;
 }
 
-/* 为了让背景透出来，需要把主题默认的白色/灰色背景去掉 */
-body, .initial-content, .page__content {
-    background-color: transparent !important;
+/* 【核心修改】让内容区域变成半透明黑色，保证文字清晰！ */
+.initial-content, .page__content, .sidebar {
+    background-color: rgba(10, 10, 15, 0.85) !important; /* 85% 不透明度的深色背景 */
+    backdrop-filter: blur(3px); /* 可选：轻微毛玻璃效果 */
+    border-radius: 8px; /* 加个圆角更好看 */
+    padding: 20px; /* 加点内边距，不让文字贴边 */
 }
-
-/* 调整一下侧边栏的透明度，让它看起来更融合 */
-.sidebar {
-    background-color: rgba(30, 30, 40, 0.8) !important;
-    backdrop-filter: blur(5px); /* 毛玻璃效果 */
-    border-radius: 10px;
+/* 针对首页特殊处理去掉 padding，防止错位 */
+body.home .page__content {
+  padding: 0 !important;
+  background-color: transparent !important;
 }
