@@ -1,10 +1,10 @@
 ---
-
+# Only the main Sass file needs front matter (the dashes are enough)
 ---
 
 @charset "utf-8";
 
-@import "minimal-mistakes"; # 引入主题默认样式
+@import "minimal-mistakes"; /* 引入主题默认样式 */
 
 /* --- 自定义样式区域 --- */
 
@@ -28,6 +28,6 @@ body, .initial-content, .page__content {
 /* 调整一下侧边栏的透明度，让它看起来更融合 */
 .sidebar {
     background-color: rgba(30, 30, 40, 0.8) !important;
-    backdrop-filter: blur(5px); /* 毛玻璃效果，不需要可删掉 */
+    backdrop-filter: blur(5px); /* 毛玻璃效果 */
     border-radius: 10px;
 }
