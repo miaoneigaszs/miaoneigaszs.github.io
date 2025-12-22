@@ -7,122 +7,74 @@
     ],
     "layout": {
         "center_x": 0.0,
-        "center_y": 0.0,
-        "width": 2.3
+        "center_y": 0.1,
+        "width": 2.6
     },
     "motions": {
         "idle": [
-            {
-                "file": "motions/idle01.mtn",
-                "fade_in": 2000,
-                "fade_out": 2000
-            },
-            {
-                "file": "motions/idle02.mtn",
-                "fade_in": 2000,
-                "fade_out": 2000
-            },
-            {
-                "file": "motions/idle03.mtn",
-                "fade_in": 2000,
-                "fade_out": 2000
-            },
-            {
-                "file": "motions/idle04.mtn",
-                "fade_in": 2000,
-                "fade_out": 2000
-            }
+            { "file": "motions/idle01.mtn", "fade_in": 2000, "fade_out": 2000 },
+            { "file": "motions/idle02.mtn", "fade_in": 2000, "fade_out": 2000 },
+            { "file": "motions/idle03.mtn", "fade_in": 2000, "fade_out": 2000 },
+            { "file": "motions/idle04.mtn", "fade_in": 2000, "fade_out": 2000 }
         ],
         "start": [
-            {
-                "file": "motions/start.mtn",
-                "sound": "sound/start.mp3",
-                "text": "主人，Violet 准备好啦！",
-                "fade_in": 2000,
-                "fade_out": 2000
-            }
-        ],
-        "tap_head": [
-            {
-                "file": "motions/tap_face.mtn",
-                "text": "唔...不要摸头会长不高的...",
-                "fade_in": 2000,
-                "fade_out": 2000
+            { 
+                "file": "motions/start.mtn", 
+                "sound": "sound/start.mp3", 
+                "text": "Violet 听候差遣~",
+                "fade_in": 2000, 
+                "fade_out": 2000 
             }
         ],
         "tap_body": [
-            {
-                "file": "motions/tap_body.mtn",
-                "sound": "sound/tap_body.mp3",
-                "text": "有什么吩咐吗，主人？",
-                "fade_in": 2000,
-                "fade_out": 2000
+            { 
+                "file": "motions/tap_body.mtn", 
+                "sound": "sound/tap_body.mp3", 
+                "text": "是有什么任务吗？",
+                "fade_in": 2000, 
+                "fade_out": 2000 
+            }
+        ],
+        "tap_head": [
+            { 
+                "file": "motions/tap_face.mtn", 
+                "text": "唔...头发会乱的...",
+                "fade_in": 2000, 
+                "fade_out": 2000 
             }
         ],
         "tap_arm_left": [
-            {
-                "file": "motions/tap_Lhand.mtn",
-                "sound": "sound/tap_Lhand.mp3",
-                "text": "这是我的左手哦。",
-                "fade_in": 2000,
-                "fade_out": 2000
+            { 
+                "file": "motions/tap_Lhand.mtn", 
+                "sound": "sound/tap_Lhand.mp3", 
+                "text": "牵手吗？",
+                "fade_in": 2000, 
+                "fade_out": 2000 
             }
         ],
         "tap_arm_right": [
-            {
-                "file": "motions/tap_Rhand.mtn",
-                "sound": "sound/tap_Rhand.mp3",
-                "text": "这是我的右手哦。",
-                "fade_in": 2000,
-                "fade_out": 2000
+            { 
+                "file": "motions/tap_Rhand.mtn", 
+                "sound": "sound/tap_Rhand.mp3", 
+                "text": "时刻准备着！",
+                "fade_in": 2000, 
+                "fade_out": 2000 
             }
         ],
         "tap_skirt": [
-            {
-                "file": "motions/tap_qunzi.mtn",
-                "text": "呀！裙子不能乱摸！",
-                "fade_in": 2000,
-                "fade_out": 2000
-            }
-        ],
-        "new_msg": [
-            {
-                "file": "motions/tap_Lhand.mtn",
-                "sound": "sound/tap_Lhand.mp3",
-                "text": "收到新消息啦！",
-                "fade_in": 2000,
-                "fade_out": 2000
+            { 
+                "file": "motions/tap_qunzi.mtn", 
+                "text": "哇！不可以！",
+                "fade_in": 2000, 
+                "fade_out": 2000 
             }
         ]
     },
     "hit_areas": [
-        {
-            "name": "head",
-            "id": "D_REF.face"
-        },
-        {
-            "name": "body",
-            "id": "D_REF.body"
-        },
-        {
-            "name": "arm_left",
-            "id": "D_REF.Lhand"
-        },
-        {
-            "name": "arm_right",
-            "id": "D_REF.Rhand"
-        },
-        {
-            "name": "skirt",
-            "id": "D_REF.QUNZI"
-        }
-    ],
-    "loop_params": [
-        {
-            "id": "PARAM_HBPL",
-            "duration": 8000,
-            "type": 0,
-            "weight": 1.0
-        }
+        { "name": "head", "id": "D_REF.face" },
+        { "name": "body", "id": "D_REF.body" },
+        { "name": "arm_left", "id": "D_REF.Lhand" },
+        { "name": "arm_right", "id": "D_REF.Rhand" },
+        { "name": "skirt", "id": "D_REF.QUNZI" }
     ]
 }
