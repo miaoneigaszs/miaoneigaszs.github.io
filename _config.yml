@@ -24,6 +24,8 @@ github_username: miaoneigaszs
 minimal_mistakes_skin: dark
 search: true
 
+repository: miaoneigaszs/miaoneigaszs.github.io
+
 # Build settings
 markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes
