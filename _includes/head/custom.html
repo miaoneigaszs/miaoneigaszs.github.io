@@ -1,2 +1,20 @@
 <!-- Custom head includes -->
 <link rel="icon" type="image/gif" href="{{ site.favicon | default: '/assets/images/icon.gif' | relative_url }}?v=1">
+
+<!-- Dynamic theme switching based on time -->
+<script>
+    (function () {
+        // Get current hour (0-23)
+        var hour = new Date().getHours();
+
+        // Determine theme based on time
+        // Daytime (6:00-18:00): air theme
+        // Nighttime (18:00-6:00): dark theme
+        var isDaytime = hour >= 6 && hour < 18;
+        var skinClass = isDaytime ? 'skin-air' : 'skin-dark';
+
+        // Apply the skin class to the HTML element
+        document.documentElement.className = document.documentElement.className.replace(/skin-\w+/g, '').trim();
+        document.documentElement.className += ' ' + skinClass;
+    })();
+</script>
