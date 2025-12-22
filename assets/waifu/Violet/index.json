@@ -5,6 +5,7 @@
     "textures": [
         "Violet.1024/texture_00.png"
     ],
+    "expressions": [],
     "layout": {
         "center_x": 0.0,
         "center_y": 0.1,
