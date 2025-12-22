@@ -21,7 +21,6 @@
 <div class="page__footer-copyright">
   &copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. 
   Designed by <a href="https://github.com/miaoneigaszs">Cln_Nagisa</a>.
-
   <br>
   <span style="font-size: 0.8em; color: #888;">
     <span id="busuanzi_container_site_pv" style="display:none; color: #ffffff; opacity: 0.8;">
@@ -35,86 +34,23 @@
 </div>
 
 <link rel="stylesheet" href="{{ '/assets/waifu/waifu.css' | relative_url }}">
-
-<div class="waifu">
-    <div class="waifu-tips"></div>
-    <canvas id="live2d" class="live2d"></canvas>
-    <div class="waifu-tool">
-        <span class="fui-home"></span>
-        <span class="fui-chat"></span>
-        <span class="fui-eye"></span>
-        <span class="fui-user"></span>
-        <span class="fui-photo"></span>
-        <span class="fui-info-circle"></span>
-        <span class="fui-cross"></span>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
-
-<script src="{{ '/assets/waifu/waifu-tips.js' | relative_url }}"></script>
-
-<script type="text/javascript">
-    /* 解决模糊问题：手动调整 Canvas 分辨率 */
-    function fixResolution() {
-        var canvas = document.getElementById("live2d");
-        var wrapper = document.getElementById("waifu");
-        // 获取 CSS 设置的显示大小
-        var width = wrapper.clientWidth;
-        var height = wrapper.clientHeight;
-        // 设置 Canvas 的实际渲染像素（乘 2 是为了高清屏）
-        canvas.width = width * 2;
-        canvas.height = height * 2;
-        // 保持样式大小不变
-        canvas.style.width = width + "px";
-        canvas.style.height = height + "px";
-    }
-
-    $(document).ready(function() {
-        // 1. 先修复分辨率
-        fixResolution();
-
-        // 2. 初始化看板娘
-        initWidget({
-            // 提示语文件（用来恢复说话功能）
-            waifuPath: "{{ '/assets/waifu/waifu-tips.json' | relative_url }}",
-            
-            // 核心路径配置
-            // 这里的逻辑是：cdnPath + model[x] + /index.json
-            cdnPath: "{{ '/assets/waifu/model/' | relative_url }}",
-            
-            // 这里填写文件夹的名字，必须完全一致！
-            model: ["Violet"], 
-            
-            // 默认材质
-            textures: [0]
-        });
-    });
-    
-    // 监听窗口大小变化，保持清晰
-    window.onresize = fixResolution;
-</script>
-
 <style>
-  /* 强制看板娘悬浮在左下角，不占据页面空间 */
+  /* 容器固定定位，不占文档流空间 */
   #waifu {
-    position: fixed !important;
+    position: fixed !important; 
     bottom: 0;
     left: 0;
     z-index: 9999 !important;
-    width: 280px; /* 默认宽度，可调 */
-    height: 250px; /* 默认高度，可调 */
-    pointer-events: none; /* 允许点击穿透空白色块 */
+    width: 280px;
+    height: 250px;
+    pointer-events: none; /* 让鼠标能穿透透明区域点到后面的网页 */
   }
   
-  /* 让 canvas 填满容器 */
   #live2d {
-    width: 280px !important; /* 必须和上面一致 */
-    height: 250px !important; /* 必须和上面一致 */
     position: relative !important;
-    pointer-events: auto; /* 允许点击人物 */
+    width: 280px !important;
+    height: 250px !important;
+    pointer-events: auto; /* 只有点到人物身上才触发事件 */
   }
 
   /* 提示框样式微调 */
@@ -134,7 +70,7 @@
     overflow: hidden;
     position: absolute;
     animation: shake 50s ease-in-out 5s infinite;
-    display: none; /* 默认隐藏，JS 会控制显示 */
+    display: none;
     pointer-events: none;
   }
 
@@ -143,3 +79,58 @@
     #waifu { display: none !important; }
   }
 </style>
+
+<div id="waifu" class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" class="live2d"></canvas>
+    <div class="waifu-tool">
+        <span class="fui-home"></span>
+        <span class="fui-chat"></span>
+        <span class="fui-eye"></span>
+        <span class="fui-user"></span>
+        <span class="fui-photo"></span>
+        <span class="fui-info-circle"></span>
+        <span class="fui-cross"></span>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
+<script src="{{ '/assets/waifu/waifu-tips.js' | relative_url }}"></script>
+
+<script type="text/javascript">
+    /* 解决模糊问题 */
+    function fixResolution() {
+        var canvas = document.getElementById("live2d");
+        var wrapper = document.getElementById("waifu");
+        // 增加这行判断，防止未加载完成时报错
+        if (!canvas || !wrapper) return; 
+        
+        var width = wrapper.clientWidth;
+        var height = wrapper.clientHeight;
+        canvas.width = width * 2; // 高清处理
+        canvas.height = height * 2;
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+    }
+
+    $(document).ready(function() {
+        // 先初始化模型
+        initWidget({
+            // 你的提示语文件（这里保留了你的 selector: #search 规则）
+            waifuPath: "{{ '/assets/waifu/waifu-tips.json' | relative_url }}",
+            
+            // 模型仓库地址：指向 model 文件夹
+            cdnPath: "{{ '/assets/waifu/model/' | relative_url }}",
+            
+            // 强制加载 Violet (确保你的文件夹名是 Violet，且里面有 index.json)
+            model: ["Violet"],
+            textures: [0]
+        });
+
+        // 再调整分辨率
+        fixResolution();
+    });
+
+    window.onresize = fixResolution;
+</script>
