@@ -5,7 +5,6 @@
     {% if site.data.ui-text[site.locale].follow_label %}
       <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
     {% endif %}
-
     {% if site.footer.links %}
       {% for link in site.footer.links %}
         {% if link.label and link.url %}
@@ -13,7 +12,6 @@
         {% endif %}
       {% endfor %}
     {% endif %}
-
     <li><a href="{{ '/feed.xml' | relative_url }}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
   </ul>
 </div>
@@ -34,53 +32,8 @@
 </div>
 
 <link rel="stylesheet" href="{{ '/assets/waifu/waifu.css' | relative_url }}">
-<style>
-  /* 容器固定定位，不占文档流空间 */
-  #waifu {
-    position: fixed !important; 
-    bottom: 0;
-    left: 0;
-    z-index: 9999 !important;
-    width: 280px;
-    height: 250px;
-    pointer-events: none; /* 让鼠标能穿透透明区域点到后面的网页 */
-  }
-  
-  #live2d {
-    position: relative !important;
-    width: 280px !important;
-    height: 250px !important;
-    pointer-events: auto; /* 只有点到人物身上才触发事件 */
-  }
 
-  /* 提示框样式微调 */
-  .waifu-tips {
-    width: 250px;
-    min-height: 70px;
-    margin: -20px 20px;
-    padding: 5px 10px;
-    border: 1px solid rgba(224, 186, 140, 0.62);
-    border-radius: 12px;
-    background-color: rgba(236, 217, 188, 0.5);
-    box-shadow: 0 3px 15px 2px rgba(191, 158, 118, 0.2);
-    font-size: 12px;
-    line-height: 24px;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    position: absolute;
-    animation: shake 50s ease-in-out 5s infinite;
-    display: none;
-    pointer-events: none;
-  }
-
-  /* 移动端隐藏 */
-  @media (max-width: 768px) {
-    #waifu { display: none !important; }
-  }
-</style>
-
-<div id="waifu" class="waifu">
+<div class="waifu">
     <div class="waifu-tips"></div>
     <canvas id="live2d" class="live2d"></canvas>
     <div class="waifu-tool">
@@ -99,38 +52,17 @@
 <script src="{{ '/assets/waifu/waifu-tips.js' | relative_url }}"></script>
 
 <script type="text/javascript">
-    /* 解决模糊问题 */
-    function fixResolution() {
-        var canvas = document.getElementById("live2d");
-        var wrapper = document.getElementById("waifu");
-        // 增加这行判断，防止未加载完成时报错
-        if (!canvas || !wrapper) return; 
-        
-        var width = wrapper.clientWidth;
-        var height = wrapper.clientHeight;
-        canvas.width = width * 2; // 高清处理
-        canvas.height = height * 2;
-        canvas.style.width = width + "px";
-        canvas.style.height = height + "px";
-    }
-
     $(document).ready(function() {
-        // 先初始化模型
         initWidget({
-            // 你的提示语文件（这里保留了你的 selector: #search 规则）
+            // 提示语配置
             waifuPath: "{{ '/assets/waifu/waifu-tips.json' | relative_url }}",
             
-            // 模型仓库地址：指向 model 文件夹
-            cdnPath: "{{ '/assets/waifu/model/' | relative_url }}",
+            // 核心：告诉插件去 assets/waifu/ 找 model_list.json
+            // 并且去 assets/waifu/model/ 找模型
+            cdnPath: "{{ '/assets/waifu/' | relative_url }}",
             
-            // 强制加载 Violet (确保你的文件夹名是 Violet，且里面有 index.json)
-            model: ["Violet"],
-            textures: [0]
+            // 确保这里只填模型文件夹的名字，不要加路径
+            model: ["Violet"]
         });
-
-        // 再调整分辨率
-        fixResolution();
     });
-
-    window.onresize = fixResolution;
 </script>
