@@ -33,7 +33,28 @@
 
 <link rel="stylesheet" href="{{ '/assets/waifu/waifu.css' | relative_url }}">
 
-<div class="waifu">
+<style>
+  #waifu {
+    position: fixed !important; 
+    bottom: 0;
+    left: 0;
+    z-index: 9999 !important;
+    width: 280px;
+    height: 250px;
+    pointer-events: none; /* 允许鼠标穿透透明区域 */
+  }
+  #live2d {
+    position: relative !important;
+    width: 280px !important;
+    height: 250px !important;
+    pointer-events: auto; /* 允许点击模型 */
+  }
+  @media (max-width: 768px) {
+    #waifu { display: none !important; }
+  }
+</style>
+
+<div id="waifu" class="waifu">
     <div class="waifu-tips"></div>
     <canvas id="live2d" class="live2d"></canvas>
     <div class="waifu-tool">
@@ -54,15 +75,12 @@
 <script type="text/javascript">
     $(document).ready(function() {
         initWidget({
-            // 提示语配置
             waifuPath: "{{ '/assets/waifu/waifu-tips.json' | relative_url }}",
-            
-            // 核心：告诉插件去 assets/waifu/ 找 model_list.json
-            // 并且去 assets/waifu/model/ 找模型
+            // 告诉插件去 assets/waifu/ 找 model_list.json
             cdnPath: "{{ '/assets/waifu/' | relative_url }}",
-            
-            // 确保这里只填模型文件夹的名字，不要加路径
-            model: ["Violet"]
+            // 加载 Violet
+            model: ["Violet"],
+            textures: [0]
         });
     });
 </script>
