@@ -29,66 +29,35 @@
 </div>
 
 <style>
-  #waifu {
-    position: fixed !important; /* 强制悬浮 */
-    bottom: 0px !important;
-    left: 0px !important;
-    z-index: 9999 !important;
-    width: 280px !important;
-    height: 250px !important;
-    pointer-events: none; /* 让鼠标能点到后面的网页 */
-    transform: translateY(0); /* 防止被其他样式偏移 */
-  }
-  
-  #live2d {
-    position: relative !important;
-    width: 280px !important;
-    height: 250px !important;
-    pointer-events: auto !important; /* 只有点人才能触发互动 */
-  }
-
-  .waifu-tips {
-    opacity: 0; /* 默认隐藏提示框 */
-    width: 250px;
-    min-height: 70px;
-    margin: -30px 20px;
-    padding: 5px 10px;
-    border: 1px solid rgba(224, 186, 140, 0.62);
-    border-radius: 12px;
-    background-color: rgba(236, 217, 188, 0.5);
-    font-size: 12px;
-    position: absolute;
-    top: -50px; /* 往上提一点 */
-  }
-  
-  /* 移动端彻底隐藏 */
-  @media (max-width: 768px) {
-    #waifu { display: none !important; }
-  }
+    #live2d {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        /* width 和 height 在 canvas 标签里控制，这里不用写 */
+    }
+    /* 移动端隐藏 */
+    @media (max-width: 768px) {
+        #live2d { display: none; }
+    }
 </style>
 
-<div id="waifu">
-    <div class="waifu-tips"></div>
-    <canvas id="live2d" width="280" height="250"></canvas>
-</div>
+<canvas id="live2d" width="280" height="260"></canvas>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
-<script src="{{ '/assets/waifu/waifu-tips.js' | relative_url }}"></script>
+<script src="https://cdn.jsdelivr.net/gh/imuncle/live2d/js/live2d.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        // 强制清理缓存，防止读取旧路径
-        try { localStorage.clear(); } catch(e) {}
-
-        initWidget({
-            waifuPath: "{{ '/assets/waifu/waifu-tips.json' | relative_url }}",
-            
-            // 🟥 路径改了！直接指向 waifu 根目录
-            cdnPath: "{{ '/assets/waifu/' | relative_url }}",
-            
-            model: ["Violet"], // 确保 assets/waifu/Violet 存在
-            textures: [0]
-        });
-    });
+    console.log("正在加载 Live2D...");
+    
+    // 简单的加载函数
+    setTimeout(() => {
+        try {
+            // ❗❗❗ 核心：路径一定要对 ❗❗❗
+            // 浏览器会去请求: https://你的域名/assets/live2d/Violet/index.json
+            loadlive2d("live2d", "{{ '/assets/waifu/Violet/index.json' | relative_url }}");
+            console.log("Live2D 加载指令已发送");
+        } catch(err) {
+            console.error("Live2D 加载失败:", err);
+        }
+    }, 1000); // 延迟1秒加载，确保页面载入完毕
 </script>
