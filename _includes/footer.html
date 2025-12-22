@@ -34,14 +34,52 @@
   </span>
 </div>
 
-<script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<link rel="stylesheet" href="{{ '/assets/waifu/waifu.css' | relative_url }}">
+
+<div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" class="live2d"></canvas>
+    <div class="waifu-tool">
+        <span class="fui-home"></span>
+        <span class="fui-chat"></span>
+        <span class="fui-eye"></span>
+        <span class="fui-user"></span>
+        <span class="fui-photo"></span>
+        <span class="fui-info-circle"></span>
+        <span class="fui-cross"></span>
+    </div>
+</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
+
+<script src="{{ '/assets/waifu/waifu-tips.js' | relative_url }}"></script>
+
+<script type="text/javascript">
+    /* 确保页面加载完成后执行 */
+    $(document).ready(function() {
+        initWidget({
+            waifuPath: "{{ '/assets/waifu/waifu-tips.json' | relative_url }}", // 提示语文件路径
+            
+            // 🔴 关键设置：告诉插件模型在本地 assets/waifu/ 目录下
+            // 这样它会去 assets/waifu/model/ 下面找模型
+            cdnPath: "{{ '/assets/waifu/' | relative_url }}", 
+            
+            // 🔴 强制加载指定模型
+            // 请把 'Pio' 改成你下载的模型文件夹的具体名字！
+            model: ["Violet"], 
+            textures: [0]
+        });
+    });
+</script>
 
 <style>
-  /* 修复：防止看板娘被页面的其他元素遮挡，强制层级最高 */
+  /* 防止被遮挡 */
   #waifu {
     z-index: 9999 !important;
   }
-  /* 优化：移动端屏幕太小，建议隐藏看板娘，以免影响阅读 */
+  /* 移动端隐藏 */
   @media (max-width: 768px) {
     #waifu {
       display: none;
