@@ -29,35 +29,104 @@
 </div>
 
 <style>
+    /* 画布样式 */
     #live2d {
         position: fixed;
         bottom: 0;
         left: 0;
         z-index: 999;
-        /* width 和 height 在 canvas 标签里控制，这里不用写 */
+        /* 关键：设置缩放基点为左下角，这样放大时也是向右上延伸 */
+        transform-origin: bottom left; 
+        transition: transform 0.2s ease; /* 让缩放有动画过渡，更丝滑 */
     }
+
+    /* 控制按钮容器 */
+    #live2d-controls {
+        position: fixed;
+        bottom: 270px; /* 放在模型头顶 (画布高260 + 10间距) */
+        left: 10px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        opacity: 0; /* 默认隐藏 */
+        transition: opacity 0.3s;
+    }
+
+    /* 鼠标移过去才显示按钮，保持界面清爽 */
+    #live2d-wrapper:hover #live2d-controls {
+        opacity: 1;
+    }
+
+    /* 按钮样式 */
+    .l2d-btn {
+        width: 30px;
+        height: 30px;
+        border: none;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+    }
+    .l2d-btn:hover {
+        background-color: #d2691e; /* 悬停变色 */
+    }
+
     /* 移动端隐藏 */
     @media (max-width: 768px) {
-        #live2d { display: none; }
+        #live2d, #live2d-controls { display: none; }
     }
 </style>
 
-<canvas id="live2d" width="280" height="260"></canvas>
+<div id="live2d-wrapper">
+    <div id="live2d-controls">
+        <button class="l2d-btn" onclick="changeScale(0.1)" title="放大">+</button>
+        <button class="l2d-btn" onclick="changeScale(-0.1)" title="缩小">-</button>
+        <button class="l2d-btn" onclick="resetScale()" title="重置" style="font-size: 12px;">↺</button>
+    </div>
+    
+    <canvas id="live2d" width="280" height="260"></canvas>
+</div>
 
 <script src="https://cdn.jsdelivr.net/gh/imuncle/live2d/js/live2d.js"></script>
 
 <script type="text/javascript">
+    // --- 缩放逻辑 ---
+    var currentScale = 1.0;
+
+    function changeScale(delta) {
+        currentScale += delta;
+        // 限制最小 0.5 倍，最大 2.0 倍
+        if (currentScale < 0.5) currentScale = 0.5;
+        if (currentScale > 2.0) currentScale = 2.0;
+        
+        applyScale();
+    }
+
+    function resetScale() {
+        currentScale = 1.0;
+        applyScale();
+    }
+
+    function applyScale() {
+        var canvas = document.getElementById("live2d");
+        canvas.style.transform = "scale(" + currentScale + ")";
+    }
+
+    // --- 加载模型逻辑 ---
     console.log("正在加载 Live2D...");
-    
-    // 简单的加载函数
     setTimeout(() => {
         try {
-            // ❗❗❗ 核心：路径一定要对 ❗❗❗
-            // 浏览器会去请求: https://你的域名/assets/live2d/Violet/index.json
-            loadlive2d("live2d", "{{ '/assets/waifu/Violet/index.json' | relative_url }}");
+            // 这里记得确认路径正确
+            loadlive2d("live2d", "{{ '/assets/live2d/Violet/index.json' | relative_url }}");
             console.log("Live2D 加载指令已发送");
         } catch(err) {
             console.error("Live2D 加载失败:", err);
         }
-    }, 1000); // 延迟1秒加载，确保页面载入完毕
+    }, 1000);
 </script>
