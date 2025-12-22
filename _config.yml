@@ -14,6 +14,9 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 encoding: "utf-8"
+url: "https://cln-nagisa.xyz"
+baseurl: ""
+
 title: Cln_Nagisa
 email:
 description: >- # this means to ignore newlines until "baseurl:"
