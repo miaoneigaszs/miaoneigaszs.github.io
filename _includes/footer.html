@@ -34,6 +34,7 @@
 <link rel="stylesheet" href="{{ '/assets/waifu/waifu.css' | relative_url }}">
 
 <style>
+  /* 强制固定在左下角，解决“多出一块”的问题 */
   #waifu {
     position: fixed !important; 
     bottom: 0;
@@ -73,14 +74,30 @@
 <script src="{{ '/assets/waifu/waifu-tips.js' | relative_url }}"></script>
 
 <script type="text/javascript">
+    /* 解决模糊问题 */
+    function fixResolution() {
+        var canvas = document.getElementById("live2d");
+        var wrapper = document.getElementById("waifu");
+        if (!canvas || !wrapper) return; 
+        var width = wrapper.clientWidth;
+        var height = wrapper.clientHeight;
+        canvas.width = width * 2; 
+        canvas.height = height * 2;
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+    }
+
     $(document).ready(function() {
+        // 清理旧缓存，解决 undefined 报错
+        try { localStorage.removeItem('modelId'); localStorage.removeItem('modelTexturesId'); } catch(e) {}
+
         initWidget({
             waifuPath: "{{ '/assets/waifu/waifu-tips.json' | relative_url }}",
-            // 告诉插件去 assets/waifu/ 找 model_list.json
-            cdnPath: "{{ '/assets/waifu/' | relative_url }}",
-            // 加载 Violet
-            model: ["Violet"],
+            cdnPath: "{{ '/assets/waifu/model/' | relative_url }}",
+            model: ["Violet"], // 确保文件夹叫 Violet
             textures: [0]
         });
+        fixResolution();
     });
+    window.onresize = fixResolution;
 </script>
