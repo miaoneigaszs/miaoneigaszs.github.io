@@ -11,7 +11,7 @@
         // Daytime (6:00-18:00): air theme
         // Nighttime (18:00-6:00): dark theme
         var isDaytime = hour >= 6 && hour < 18;
-        var skinClass = isDaytime ? 'skin-air' : 'skin-dark';
+        var skinClass = isDaytime ? 'air' : 'dark';
 
         // Apply the skin class to the HTML element
         document.documentElement.className = document.documentElement.className.replace(/skin-\w+/g, '').trim();
