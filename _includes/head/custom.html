@@ -13,110 +13,21 @@
         var isDaytime = hour >= 6 && hour < 18;
         var skinName = isDaytime ? 'air' : 'dark';
 
-        // Load the skin-specific CSS from the Minimal Mistakes theme repository
-        // This dynamically injects the chosen skin's CSS
-        var link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://cdn.jsdelivr.net/gh/mmistakes/minimal-mistakes@master/_sass/minimal-mistakes/skins/_' + skinName + '.scss';
-        link.id = 'dynamic-skin';
+        // Remove the default theme stylesheet loaded by Jekyll
+        // and inject the time-based theme stylesheet instead
+        window.addEventListener('DOMContentLoaded', function () {
+            // Find and remove the main.css (default theme)
+            var defaultStyle = document.querySelector('link[href*="main.css"]');
+            if (defaultStyle) {
+                defaultStyle.disabled = true;
+            }
 
-        // Since GitHub serves SCSS as text, we need a different approach
-        // We'll use CSS custom properties to override the theme colors
-        var style = document.createElement('style');
-        style.id = 'time-based-theme';
-
-        if (skinName === 'air') {
-            // Air theme colors
-            style.textContent = `
-        :root {
-          --background-color: #eeeeee;
-          --text-color: #222831;
-          --primary-color: #0092ca;
-          --border-color: rgba(0, 0, 0, 0.1);
-          --code-background-color: #fafafa;
-          --link-color: #0092ca;
-          --link-color-hover: #00536b;
-          --link-color-visited: #003f5a;
-          --masthead-link-color: #222831;
-          --masthead-link-color-hover: #0092ca;
-          --navicon-link-color-hover: #669cb9;
-          --form-background-color: #f2f3f3;
-          --footer-background-color: #f3f3f3;
-        }
-        body {
-          background-color: var(--background-color);
-          color: var(--text-color);
-        }
-        .page__content a, .page__meta a, .page__taxonomy a {
-          color: var(--link-color);
-        }
-        .page__content a:hover, .page__meta a:hover, .page__taxonomy a:hover {
-          color: var(--link-color-hover);
-        }
-        .masthead {
-          background-color: #fff;
-        }
-        .greedy-nav a {
-          color: var(--masthead-link-color);
-        }
-        .greedy-nav a:hover {
-          color: var(--masthead-link-color-hover);
-        }
-      `;
-        } else {
-            // Dark theme colors
-            style.textContent = `
-        :root {
-          --background-color: #252a34;
-          --text-color: #eaeaea;
-          --primary-color: #00adb5;
-          --border-color: rgba(255, 255, 255, 0.1);
-          --code-background-color: #2f3541;
-          --link-color: #00adb5;
-          --link-color-hover: #00bac6;
-          --link-color-visited: #00878e;
-          --masthead-link-color: #eaeaea;
-          --masthead-link-color-hover: #00adb5;
-          --navicon-link-color-hover: #00adb5;
-          --form-background-color: #2f3541;
-          --footer-background-color: #1a1d25;
-        }
-        body {
-          background-color: var(--background-color);
-          color: var(--text-color);
-        }
-        .page__content, .page__meta, .page__share, .page__comments {
-          color: var(--text-color);
-        }
-        .page__content a, .page__meta a, .page__taxonomy a {
-          color: var(--link-color);
-        }
-        .page__content a:hover, .page__meta a:hover, .page__taxonomy a:hover {
-          color: var(--link-color-hover);
-        }
-        .masthead {
-          background-color: #1a1d25;
-          border-bottom-color: var(--border-color);
-        }
-        .greedy-nav {
-          background-color: #1a1d25;
-        }
-        .greedy-nav a {
-          color: var(--masthead-link-color);
-        }
-        .greedy-nav a:hover {
-          color: var(--masthead-link-color-hover);
-        }
-        .page__footer {
-          background-color: var(--footer-background-color);
-          color: var(--text-color);
-        }
-        .page__footer a {
-          color: var(--link-color);
-        }
-      `;
-        }
-
-        document.head.appendChild(style);
+            // Inject the time-appropriate skin CSS
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '{{ "/assets/css/skins/" | relative_url }}' + skinName + '.css';
+            link.id = 'dynamic-theme';
+            document.head.appendChild(link);
+        });
     })();
 </script>
