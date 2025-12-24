@@ -1,6 +1,29 @@
 <!-- Custom head includes -->
 <link rel="icon" type="image/gif" href="{{ site.favicon | default: '/assets/images/icon.gif' | relative_url }}?v=1">
 
+<style>
+  body {
+    position: relative;
+    background: none !important; /* 清除默认背景 */
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /* 设置背景图片路径 */
+    background: url('{{ "/assets/images/birthday.png" | relative_url }}') no-repeat center center;
+    background-size: cover;
+    /* 设置透明度 (0.0 到 1.0) */
+    opacity: 0.3; 
+  }
+</style>
+
+
 <!-- Dynamic theme switching based on time of day -->
 <!-- TEMPORARILY DISABLED - uncomment after Jekyll rebuild
 <script>
