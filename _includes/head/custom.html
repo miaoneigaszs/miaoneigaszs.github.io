@@ -5,12 +5,30 @@
   body::before {
     content: "";
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
     z-index: -1;
-    background: url('{{ "/assets/images/birthday.png" | relative_url }}') no-repeat center top;
-    background-size: cover; /* 自动覆盖 */
-    opacity: 0.15; /* 降低透明度，让它更像水印而不是图片 */
-    filter: blur(2px); /* 稍微模糊背景，保护视力 */
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    /* 提高显示度：透明度从 0.15 提升至 0.4（可根据需要继续调高） */
+    opacity: 0.4; 
+    /* 移除模糊效果，让图片更清晰 */
+    filter: none; 
+  }
+
+  /* 默认显示手机端图片 (birthday.png) */
+  body::before {
+    background-image: url('{{ "/assets/images/birthday.png" | relative_url }}');
+  }
+
+  /* 当屏幕宽度大于 768px 时（通常是电脑端），切换为 birthday1.png */
+  @media (min-width: 768px) {
+    body::before {
+      background-image: url('{{ "/assets/images/birthday1.png" | relative_url }}');
+    }
   }
 
   /* 导航栏毛玻璃 */
@@ -24,6 +42,7 @@
     background: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
     margin-top: 2em;
+    padding: 20px; /* 建议增加内边距，防止文字贴边 */
   }
 </style>
 
