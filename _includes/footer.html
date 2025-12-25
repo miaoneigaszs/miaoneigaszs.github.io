@@ -2,20 +2,23 @@
 <div class="page__footer-follow">
   <ul class="social-icons">
     {% if site.data.ui-text[site.locale].follow_label %}
-      <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
+    <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
     {% endif %}
     {% if site.footer.links %}
-      {% for link in site.footer.links %}
-        {% if link.label and link.url %}
-          <li><a href="{{ link.url }}" rel="nofollow noopener noreferrer"><i class="{{ link.icon | default: 'fas fa-link' }}" aria-hidden="true"></i> {{ link.label }}</a></li>
-        {% endif %}
-      {% endfor %}
+    {% for link in site.footer.links %}
+    {% if link.label and link.url %}
+    <li><a href="{{ link.url }}" rel="nofollow noopener noreferrer"><i class="{{ link.icon | default: 'fas fa-link' }}"
+          aria-hidden="true"></i> {{ link.label }}</a></li>
     {% endif %}
-    <li><a href="{{ '/feed.xml' | relative_url }}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
+    {% endfor %}
+    {% endif %}
+    <li><a href="{{ '/feed.xml' | relative_url }}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{
+        site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
   </ul>
 </div>
 <div class="page__footer-copyright">
-  &copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. Designed by <a href="https://github.com/miaoneigaszs">Cln_Nagisa</a>.
+  &copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. Designed by <a
+    href="https://github.com/miaoneigaszs">Cln_Nagisa</a>.
   <br>
   <span style="font-size: 0.8em; color: #888;">
     <span id="busuanzi_container_site_pv" style="display:none; color: #ffffff; opacity: 0.8;">
@@ -26,138 +29,151 @@
       <i class="fas fa-user"></i> 访客数: <span id="busuanzi_value_site_uv"></span> 人
     </span>
     &nbsp;|&nbsp;
-    <button id="bg-toggle-btn" onclick="toggleBackground()" title="切换背景图" style="background: none; border: none; color: #fff; opacity: 0.8; cursor: pointer; font-size: 0.8em;">
+    <button id="bg-toggle-btn" onclick="toggleBackground()" title="切换背景图"
+      style="background: none; border: none; color: #fff; opacity: 0.8; cursor: pointer; font-size: 0.8em;">
       <i class="fas fa-image"></i> <span id="bg-toggle-text">隐藏背景</span>
     </button>
   </span>
 </div>
 
 <script>
-// 背景图切换功能
-function toggleBackground() {
+  // 背景图切换功能
+  function toggleBackground() {
     var isHidden = sessionStorage.getItem('bgHidden') === 'true';
     if (isHidden) {
-        // 显示背景
-        document.body.classList.remove('bg-hidden');
-        sessionStorage.setItem('bgHidden', 'false');
-        document.getElementById('bg-toggle-text').textContent = '隐藏背景';
+      // 显示背景 - 移除 html 和 body 上的类
+      document.documentElement.classList.remove('bg-hidden');
+      document.body.classList.remove('bg-hidden');
+      sessionStorage.setItem('bgHidden', 'false');
+      document.getElementById('bg-toggle-text').textContent = '隐藏背景';
     } else {
-        // 隐藏背景
-        document.body.classList.add('bg-hidden');
-        sessionStorage.setItem('bgHidden', 'true');
-        document.getElementById('bg-toggle-text').textContent = '显示背景';
+      // 隐藏背景 - 添加类到 html 和 body
+      document.documentElement.classList.add('bg-hidden');
+      document.body.classList.add('bg-hidden');
+      sessionStorage.setItem('bgHidden', 'true');
+      document.getElementById('bg-toggle-text').textContent = '显示背景';
     }
-}
+  }
 
-// 页面加载时检查状态（sessionStorage 在关闭浏览器/标签页后自动清除）
-document.addEventListener('DOMContentLoaded', function() {
+  // 页面加载时检查状态并更新按钮文字
+  document.addEventListener('DOMContentLoaded', function () {
     var isHidden = sessionStorage.getItem('bgHidden') === 'true';
     if (isHidden) {
-        document.body.classList.add('bg-hidden');
-        document.getElementById('bg-toggle-text').textContent = '显示背景';
+      // html 上的类已在 head 中添加，这里确保 body 也有
+      document.body.classList.add('bg-hidden');
+      document.getElementById('bg-toggle-text').textContent = '显示背景';
     }
-});
+  });
 </script>
 
 <style>
-    /* 画布样式 */
-    #live2d {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        z-index: 999;
-        /* 关键：设置缩放基点为左下角，这样放大时也是向右上延伸 */
-        transform-origin: bottom left; 
-        transition: transform 0.2s ease; /* 让缩放有动画过渡，更丝滑 */
-    }
+  /* 画布样式 */
+  #live2d {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    /* 关键：设置缩放基点为左下角，这样放大时也是向右上延伸 */
+    transform-origin: bottom left;
+    transition: transform 0.2s ease;
+    /* 让缩放有动画过渡，更丝滑 */
+  }
 
-    /* 控制按钮容器 */
+  /* 控制按钮容器 */
+  #live2d-controls {
+    position: fixed;
+    bottom: 300px;
+    /* 放在模型头顶 (画布高260 + 10间距) */
+    left: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    opacity: 0;
+    /* 默认隐藏 */
+    transition: opacity 0.3s;
+  }
+
+  /* 鼠标移过去才显示按钮，保持界面清爽 */
+  #live2d-wrapper:hover #live2d-controls {
+    opacity: 1;
+  }
+
+  /* 按钮样式 */
+  .l2d-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+  }
+
+  .l2d-btn:hover {
+    background-color: #d2691e;
+    /* 悬停变色 */
+  }
+
+  /* 移动端隐藏 */
+  @media (max-width: 768px) {
+
+    #live2d,
     #live2d-controls {
-        position: fixed;
-        bottom: 300px; /* 放在模型头顶 (画布高260 + 10间距) */
-        left: 10px;
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        opacity: 0; /* 默认隐藏 */
-        transition: opacity 0.3s;
+      display: none;
     }
-
-    /* 鼠标移过去才显示按钮，保持界面清爽 */
-    #live2d-wrapper:hover #live2d-controls {
-        opacity: 1;
-    }
-
-    /* 按钮样式 */
-    .l2d-btn {
-        width: 30px;
-        height: 30px;
-        border: none;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        outline: none;
-    }
-    .l2d-btn:hover {
-        background-color: #d2691e; /* 悬停变色 */
-    }
-
-    /* 移动端隐藏 */
-    @media (max-width: 768px) {
-        #live2d, #live2d-controls { display: none; }
-    }
+  }
 </style>
 
 <div id="live2d-wrapper">
-    <div id="live2d-controls">
-        <button class="l2d-btn" onclick="changeScale(0.1)" title="放大">+</button>
-        <button class="l2d-btn" onclick="changeScale(-0.1)" title="缩小">-</button>
-        <button class="l2d-btn" onclick="resetScale()" title="重置" style="font-size: 12px;">↺</button>
-    </div>
-    
-    <canvas id="live2d" width="280" height="300"></canvas>
+  <div id="live2d-controls">
+    <button class="l2d-btn" onclick="changeScale(0.1)" title="放大">+</button>
+    <button class="l2d-btn" onclick="changeScale(-0.1)" title="缩小">-</button>
+    <button class="l2d-btn" onclick="resetScale()" title="重置" style="font-size: 12px;">↺</button>
+  </div>
+
+  <canvas id="live2d" width="280" height="300"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/gh/imuncle/live2d/js/live2d.js"></script>
 
 <script type="text/javascript">
-    // --- 缩放逻辑 ---
-    var currentScale = 1.0;
+  // --- 缩放逻辑 ---
+  var currentScale = 1.0;
 
-    function changeScale(delta) {
-        currentScale += delta;
-        // 限制最小 0.5 倍，最大 2.0 倍
-        if (currentScale < 0.5) currentScale = 0.5;
-        if (currentScale > 2.0) currentScale = 2.0;
-        
-        applyScale();
+  function changeScale(delta) {
+    currentScale += delta;
+    // 限制最小 0.5 倍，最大 2.0 倍
+    if (currentScale < 0.5) currentScale = 0.5;
+    if (currentScale > 2.0) currentScale = 2.0;
+
+    applyScale();
+  }
+
+  function resetScale() {
+    currentScale = 1.0;
+    applyScale();
+  }
+
+  function applyScale() {
+    var canvas = document.getElementById("live2d");
+    canvas.style.transform = "scale(" + currentScale + ")";
+  }
+
+  // --- 加载模型逻辑 ---
+  console.log("正在加载 Live2D...");
+  setTimeout(() => {
+    try {
+      // 这里记得确认路径正确
+      loadlive2d("live2d", "{{ '/assets/waifu/Violet/index.json' | relative_url }}");
+      console.log("Live2D 加载指令已发送");
+    } catch (err) {
+      console.error("Live2D 加载失败:", err);
     }
-
-    function resetScale() {
-        currentScale = 1.0;
-        applyScale();
-    }
-
-    function applyScale() {
-        var canvas = document.getElementById("live2d");
-        canvas.style.transform = "scale(" + currentScale + ")";
-    }
-
-    // --- 加载模型逻辑 ---
-    console.log("正在加载 Live2D...");
-    setTimeout(() => {
-        try {
-            // 这里记得确认路径正确
-            loadlive2d("live2d", "{{ '/assets/waifu/Violet/index.json' | relative_url }}");
-            console.log("Live2D 加载指令已发送");
-        } catch(err) {
-            console.error("Live2D 加载失败:", err);
-        }
-    }, 1000);
+  }, 1000);
 </script>

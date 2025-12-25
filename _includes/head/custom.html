@@ -31,7 +31,8 @@
     }
   }
 
-  /* 隐藏背景图的样式 */
+  /* 隐藏背景图的样式 - 支持在 html 或 body 上添加类 */
+  html.bg-hidden body::before,
   body.bg-hidden::before {
     opacity: 0 !important;
     visibility: hidden;
@@ -56,10 +57,9 @@
 <!-- 立即执行：在页面渲染前检查是否需要隐藏背景，防止闪烁 -->
 <script>
   (function () {
-    // 立即检查 sessionStorage，在 body 渲染前就添加隐藏类
+    // 立即检查 sessionStorage，在 body 渲染前就添加隐藏类到 html 元素
     if (sessionStorage.getItem('bgHidden') === 'true') {
-      // 使用 document.write 注入样式，确保在页面渲染前生效
-      document.write('<style>body::before { opacity: 0 !important; visibility: hidden; }</style>');
+      document.documentElement.classList.add('bg-hidden');
     }
   })();
 </script>
