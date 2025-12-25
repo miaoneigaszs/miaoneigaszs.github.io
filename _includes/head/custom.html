@@ -53,6 +53,17 @@
   }
 </style>
 
+<!-- 立即执行：在页面渲染前检查是否需要隐藏背景，防止闪烁 -->
+<script>
+  (function () {
+    // 立即检查 sessionStorage，在 body 渲染前就添加隐藏类
+    if (sessionStorage.getItem('bgHidden') === 'true') {
+      // 使用 document.write 注入样式，确保在页面渲染前生效
+      document.write('<style>body::before { opacity: 0 !important; visibility: hidden; }</style>');
+    }
+  })();
+</script>
+
 
 <!-- Dynamic theme switching based on time of day -->
 <!-- TEMPORARILY DISABLED - uncomment after Jekyll rebuild
