@@ -231,16 +231,12 @@ Router Agent → 分类问题类型
 <details markdown="1">
 <summary>点击查看完整源码</summary>
 
-源码文件位于 `/assets/Codes/main.py`，包含约 500 行 Python 代码，涵盖：
+📥 **[下载 main.py 源码](/assets/Codes/main.py)**
+
+源码包含约 500 行 Python 代码，涵盖：
 - Qdrant 向量数据库初始化
 - LangGraph 状态图构建
 - 检索、评分、重写、生成节点实现
 - Streamlit Web UI
 
 </details>
-
----
-
-## 📄 License
-
-MIT

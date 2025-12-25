@@ -25,8 +25,39 @@
     <span id="busuanzi_container_site_uv" style="display:none; color: #ffffff; opacity: 0.8;">
       <i class="fas fa-user"></i> 访客数: <span id="busuanzi_value_site_uv"></span> 人
     </span>
+    &nbsp;|&nbsp;
+    <button id="bg-toggle-btn" onclick="toggleBackground()" title="切换背景图" style="background: none; border: none; color: #fff; opacity: 0.8; cursor: pointer; font-size: 0.8em;">
+      <i class="fas fa-image"></i> <span id="bg-toggle-text">隐藏背景</span>
+    </button>
   </span>
 </div>
+
+<script>
+// 背景图切换功能
+function toggleBackground() {
+    var isHidden = sessionStorage.getItem('bgHidden') === 'true';
+    if (isHidden) {
+        // 显示背景
+        document.body.classList.remove('bg-hidden');
+        sessionStorage.setItem('bgHidden', 'false');
+        document.getElementById('bg-toggle-text').textContent = '隐藏背景';
+    } else {
+        // 隐藏背景
+        document.body.classList.add('bg-hidden');
+        sessionStorage.setItem('bgHidden', 'true');
+        document.getElementById('bg-toggle-text').textContent = '显示背景';
+    }
+}
+
+// 页面加载时检查状态（sessionStorage 在关闭浏览器/标签页后自动清除）
+document.addEventListener('DOMContentLoaded', function() {
+    var isHidden = sessionStorage.getItem('bgHidden') === 'true';
+    if (isHidden) {
+        document.body.classList.add('bg-hidden');
+        document.getElementById('bg-toggle-text').textContent = '显示背景';
+    }
+});
+</script>
 
 <style>
     /* 画布样式 */

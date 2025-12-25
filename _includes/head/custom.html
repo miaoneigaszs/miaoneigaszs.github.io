@@ -5,18 +5,18 @@
   body::before {
     content: "";
     position: fixed;
-    top: 0; 
-    left: 0; 
-    width: 100%; 
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
     z-index: -1;
     background-repeat: no-repeat;
     background-position: center top;
     background-size: cover;
     /* 提高显示度：透明度从 0.15 提升至 0.4（可根据需要继续调高） */
-    opacity: 0.4; 
+    opacity: 0.4;
     /* 移除模糊效果，让图片更清晰 */
-    filter: none; 
+    filter: none;
   }
 
   /* 默认显示手机端图片 (birthday.png) */
@@ -31,6 +31,12 @@
     }
   }
 
+  /* 隐藏背景图的样式 */
+  body.bg-hidden::before {
+    opacity: 0 !important;
+    visibility: hidden;
+  }
+
   /* 导航栏毛玻璃 */
   .masthead {
     background: rgba(255, 255, 255, 0.6) !important;
@@ -42,7 +48,8 @@
     background: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
     margin-top: 2em;
-    padding: 20px; /* 建议增加内边距，防止文字贴边 */
+    padding: 20px;
+    /* 建议增加内边距，防止文字贴边 */
   }
 </style>
 
