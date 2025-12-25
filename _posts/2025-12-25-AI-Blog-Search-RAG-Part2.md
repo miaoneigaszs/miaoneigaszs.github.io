@@ -6,11 +6,12 @@ categories:
 tags:
   - LangGraph
   - RAG
+date: 2025-12-25 16:10:00 +0800
 ---
 
 ## 前言
 
-在[上篇](/ai/rag/AI-Blog-Search-RAG-Part1/)中，我们介绍了这个自适应 RAG 系统的核心特性和架构设计。本篇将深入代码实现，解析关键函数和优化细节。
+在[上篇](/AI-Blog-Search-RAG-Part1/)中，我们介绍了这个自适应 RAG 系统的核心特性和架构设计。本篇将深入代码实现，解析关键函数和优化细节。
 
 ---
 
