@@ -2,13 +2,10 @@
 title: "AI Blog Search - 基于 LangGraph 的自适应 RAG 系统（上）"
 
 categories:
-  - AI
   - RAG
 tags:
   - LangGraph
   - RAG
-  - Qdrant
-  - 中文NLP
 ---
 
 ## 🔧 项目简介

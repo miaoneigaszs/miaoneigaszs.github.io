@@ -5,9 +5,8 @@ excerpt: >
 last_modified_at: 2025-12-19
 
 categories:
-  - 生活
+  - 心情
 tags:
-  - 生活
   - 心情
 toc : true
 toc_label: "目录"
