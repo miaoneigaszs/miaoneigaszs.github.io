@@ -7,264 +7,234 @@ categories:
 tags:
   - RAG
   - LLM
-  - LangChain
-  - LangGraph
   - Architecture
+  - LangGraph
 ---
 
 在大模型（LLM）应用爆发的今天，**RAG (Retrieval-Augmented Generation，检索增强生成)** 已经从一个新颖的概念变成了企业级 AI 应用的标配。
 
 但很多开发者在跑通了 Github 上的 Demo 后通常会发现：**为什么 Demo 效果很好，上线后却一塌糊涂？** 检索不准、回答幻觉、多轮对话逻辑混乱、成本居高不下...
 
-本文将剥离炒作，从工程实践的角度，深入探讨如何构建一个"生产可用"的 RAG 系统。我们将从最基础的代码开始，一路进阶到 2025 年最前沿的 **Agentic RAG** 架构，并重点补充被大多数教程忽略的**数据治理、查询扩展**与**安全合规**。
+本文剥离炒作，从**工程架构设计**的角度，深入探讨如何构建一个"生产可用"的 RAG 系统。我们将重点关注决策背后的**"为什么"**，而非仅仅堆砌代码。
 
 ---
 
-## Part 1: The "Hello World" Trap (基础回顾)
+## Part 0: The "Why" behind RAG (基础认知)
 
-最基础的 Naive RAG 流程大家都很熟悉了：**Indexing (建索引)** -> **Retrieval (检索)** -> **Generation (生成)**。
+### 什么是 RAG？
+简单来说，`RAG = Retriever (检索器) + Generator (生成器)`。
+LLM 就像一个"超级大脑"，但它的知识停留在训练结束的那一天（比如 2023 年）。RAG 就像是给了这个大脑一个"实时搜索引擎"或"企业知识库"。
 
-让我们用一段最简洁的 LangChain 代码来回顾这个过程，以此作为我们优化的起点：
+**核心流程：**
+`[用户提问] -> [去知识库找资料] -> [把资料喂给 LLM] -> [LLM 结合资料回答]`
+
+### 为什么不直接微调 (Fine-tuning)？
+这是最常见的误区。
+
+| 方案 | 优点 | 缺点 | 适用场景 |
+| :--- | :--- | :--- | :--- |
+| **纯 LLM** | 简单、流畅 | 知识过时、严重幻觉、无法访问私有数据 | 通用闲聊、创意写作 |
+| **Fine-tuning** | 深度定制语气/风格 | **成本高**、更新知识极慢（需重新训练）、由于"灾难性遗忘"可能变笨 | 医疗/法律专用术语、角色扮演 |
+| **RAG** | **数据实时**、可解释性强（知道引用了哪篇文档）、成本低 | 架构复杂、依赖检索质量 | **企业知识库、客服、搜索助手** |
+
+---
+
+## Part 1: The "Hello World" Trap (警惕 Demo 陷阱)
+
+最基础的 Naive RAG 流程大家都很熟悉了：**Indexing** -> **Retrieval** -> **Generation**。
+很多教程会给出这样的 LangChain 代码：
 
 ```python
-# 0. 准备环境
-from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.chains import RetrievalQA
-from langchain_openai import ChatOpenAI
-
-# 1. Indexing: Load -> Split -> Embed -> Store
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500, 
-    chunk_overlap=50 # 为什么需要 Overlap？防止语义在切分点断裂
-)
-splits = text_splitter.split_documents(documents)
+# ⚠️ 典型的 Demo 代码 - 生产不可用
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
 vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
-
-# 2. Retrieval & Generation
-qa_chain = RetrievalQA.from_chain_type(
-    llm=ChatOpenAI(model_name="gpt-4", temperature=0),
-    retriever=vectorstore.as_retriever()
-)
-
-response = qa_chain.invoke({"query": "RAG 的主要挑战是什么？"})
-print(response)
+qa_chain = RetrievalQA.from_chain_type(llm=ChatOpenAI(), retriever=vectorstore.as_retriever())
 ```
 
-**⚠️ 警告**：这个代码在生产环境中是**不可用**的。它存在以下致命缺陷：
-1.  **Context 碎片化**：500 字符可能切断了关键逻辑。
-2.  **检索单一**：仅靠向量相似度无法处理精确匹配（如产品型号）。
-3.  **无查询优化**：用户的问题往往是不完整的。
+**🚫 真实世界的失败案例：**
+> **案例**：某金融客户问 "2024年Q3财报营收是多少？"
+> **结果**：系统检索出了一堆 2023 年 Q3 的数据，因为向量模型认为 "2023 Q3" 和 "2024 Q3"在语义上极度相似。
+> **教训**：单纯的向量检索无法处理"精确匹配"（数字、年份、产品型号）。
+
+**生产环境的三大挑战**：
+1.  **切分太死板**：500 字符可能刚好把"问题"和"结论"切到了两个不同的块里。
+2.  **检索单一**：Dense Vector 对模糊语义强，对专有名词弱。
+3.  **无视用户意图**：用户说"再具体点"，Naive RAG 根本不知道这个"再"是指什么。
 
 ---
 
-## Part 2: Data Engineering - The Unsung Hero (数据基石)
+## Part 2: Data Engineering Strategies (数据决策指南)
 
-**"Garbage In, Garbage Out".** RAG 的天花板是由数据质量决定的，而不是模型。
+**"Garbage In, Garbage Out".** RAG 的上限由数据决定。
 
-### 1. Chunking Strategy (切分策略的艺术)
+### 1. Chunking 策略选择
+不要无脑用 `RecursiveCharacterTextSplitter`。
 
-不要盲目使用 `500` 或 `1000` 的固定长度。
-
-*   **Fixed-size Chunking**: 简单粗暴，容易导致语义截断。
-*   **Recursive Chunking**: 稍微智能，尝试按分隔符（段落、句号）递归切分。**Overlap (重叠)** 非常重要（建议 10-20%），它保证了跨 chunk 的句子语意完整性。
-*   **Semantic Chunking**: 这是一个 Game Changer。它使用 Embedding 模型计算相邻句子的语义距离，只在语义发生突变（话题转换）时才切断。
-
-#### 🔥 Pro Tip: Parent Document Retriever (Small to Big)
-这是一个生产环境中极其实用的技巧。
-*   **问题**：小的 chunk 容易匹配检索，但丢失了上下文；大的 chunk 上下文完整，但包含了太多噪音向量，难以检索。
-*   **方案**：**索引切小的，生成给大的**。将文档切成小块（Child Chunks）做向量索引，当检索命中 Child 时，返回其对应的父文档块（Parent Chunk）给 LLM。
-
-### 2. Embedding Model Selection (模型选型与 ColBERT)
-
-别只盯着 OpenAI 的 `text-embedding-3-small`。
-
-*   **OpenAI/Cohere**: 闭源，通用性强，运维简单。
-*   **BAAI/bge-m3**: **精细化中文生产环境首选**。它支持 Dense (向量), Sparse (稀疏), 和 Multi-Vector (ColBERT) 模式。
-*   **ColBERT (Late Interaction)**: 这是一个关键概念。传统的 Embedding 把整个文档压成一个向量。ColBERT 保留了文档中**每个 Token 的向量**，在检索时进行 Token 级别的交互（MaxSim），这对于捕捉**细微的语义差异**极其有效，虽然存储成本较高。
-
-### 3. Vector Database Selection (向量库选型)
-
-Chroma 适合 Demo，生产环境需要更健壮的选择：
-
-| 类别 | 工具 | 适用场景 |
+| 场景 | 推荐策略 | 核心理由 |
 | :--- | :--- | :--- |
-| **原生向量库** | **Qdrant**, Weaviate, Milvus | 亿级数据量，高并发，需要高级过滤 |
-| **嵌入式/轻量** | **LanceDB**, Chroma | 本地运行，Serverless 架构 |
-| **传统库扩展** | **pgvector** (Postgres), Elasticsearch | 已有技术栈基于 SQL/ES，不想引入新组件 |
+| **结构化文档** (法规/合同) | **按章节/Markdown标题切分** | 每一条法规必须完整，不能从中间截断。 |
+| **对话记录** (会议/客服) | **按对话轮次切分** | "A说..." 和 "B回复..." 必须在一起才能保留上下文。 |
+| **技术文档** (API/代码) | **Semantic Chunking (语义切分)** | 代码块和它的解释文本必须在同一个 Chunk 里。 |
+| **通用内容** (新闻/博客) | **Recursive + 15% Overlap** | 简单有效，Overlap 是为了防止代词（He/It）丢失指代对象。 |
+
+### 2. Parent Document Retriever (小索引，大内容)
+这是一个解决"检索粒度 vs 生成粒度"矛盾的架构设计。
+
+*   **核心洞察**：类似于电商搜索。**搜索时**你匹配的是精简的"商品标题"（精准），但**查看时**你看到的是完整的"商品详情页"（丰富）。
+*   **实现原理**：
+    1.  将文档切成 **Child Chunks** (比如 100字) 做向量索引 —— 易于精准命中。
+    2.  命中 Child 后，系统通过 ID 找到并返回对应的 **Parent Chunk** (比如 500字) 给 LLM。
+
+### 3. Embedding Model Selection (模型选型指南)
+别只盯着 OpenAI，不同的业务场景需要不同的模型。
+
+| 模型类别 | 代表模型 | 核心优势 | 适用场景 | 劣势 |
+| :--- | :--- | :--- | :--- | :--- |
+| **通用闭源** | `text-embedding-3-small` (OpenAI) | **运维极简**，多语言支持好，维度可变 | 快速验证 MVP，无需自建 Infra | 数据需出境，成本随量增 |
+| **中文最强** | `bge-m3` (BAAI) | **多功能** (Dense + Sparse + Multi-Vector)，长文本支持 (8192) | **中文生产环境首选**，需精细化检索 | 推理资源消耗较大 |
+| **晚期交互** | `ColBERT` | **Token 级交互**，精确捕捉细微语义差异 (精确到 Excat Match) | **对查准率要求极高**的场景 | 存储膨胀 10-20 倍，查询慢 |
+
+### 4. Vector Database Selection (向量库选型)
+选择向量库主要看你的**数据规模**和**现有技术栈**。
+
+| 类别 | 工具 | 推荐理由 | 适用场景 |
+| :--- | :--- | :--- | :--- |
+| **原生向量库** | **Qdrant**, Milvus, Weaviate | **性能怪兽**。Qdrant (Rust) 极快且资源占用低；Milvus 分布式强。 | **亿级数据量**，高并发，需要高级 Filter |
+| **嵌入式/轻量** | **LanceDB**, Chroma | **无需运维**。基于文件的 Serverless 架构，甚至可以直接在该 S3 上查询。 | 本地运行、CI/CD、单机应用 |
+| **传统库扩展** | **pgvector** (Postgres), Elasticsearch | **栈一致性**。如果已有 PGsql，直接开插件是运维成本最低的方案。 | 不想引入新组件，数据量在千万级以下 |
 
 ---
 
-## Part 3: Advanced Retrieval Techniques (检索黑魔法)
+## Part 3: Advanced Retrieval (检索黑魔法)
 
 ### 1. Query Rewriting & Expansion (查询改写与扩展)
 
-用户的 Query 通常是模糊的。直接拿去检索往往效果不佳。
+用户的 Query 通常是模糊的。
 
-*   **Multi-Query (多路查询)**: 让 LLM 基于原始问题生成 3-5 个不同角度的相似问题，并行检索，取并集。这能显著提高由于措辞不同导致的漏召回。
-*   **HyDE (Hypothetical Document Embeddings)**: 让 LLM 针对问题先生成一个**假设性的答案**（哪怕是幻觉），然后用这个假设答案的向量去库里搜。因为"答案"和"标准答案文档"在向量空间里比"问题"更具相似性。
+*   **Multi-Query (多路查询)**:
+    *   **原理**：让 LLM 基于原始问题生成 3-5 个**不同角度**的相似问题，并行检索，取最后结果的并集。
+    *   **解决痛点**：用户因**措辞不当**导致的"漏召回"。
+*   **HyDE (假设性文档嵌入)**:
+    *   **原理**：让 LLM 先生成一个"假设性答案"，再用这个答案去检索。
+    *   **解决痛点**：Query 很短或很抽象，与文档在向量空间中**语义距离太远**。
+    
+    **HyDE 工作原理流程：**
+```mermaid
+graph LR
+    A[用户问题: 苹果最新财报如何?] --> B(LLM 生成假设答案)
+    B --> C[假设答案: 苹果2024Q3营收达到xxx亿...]
+    C --> D{用假设答案去检索}
+    D -- Vector Search --> E[命中真实的财报文档]
+```
+> **核心逻辑**：在向量空间中，"答案"和"标准答案"的相似度，远高于"问题"和"标准答案"的相似度。
 
 ### 2. Hybrid Search (混合检索)
+解决"专有名词搜不到"的问题。
 
-纯向量检索（Dense Retrieval）对**专有名词、精确数字、SKU 编码**匹配效果很差。
-**最佳实践**：**BM25 (关键词/稀疏向量) + Vector (稠密向量)** 加权融合。
+*   **Vector Search (稠密向量)**: 擅长语义理解。搜 "苹果手机" 能匹配 "iPhone"。
+*   **Keyword Search (BM25/稀疏向量)**: 擅长精确匹配。搜 "RTX4090-Ti" 绝不会匹配 "RTX4090"。
+*   **RRF (Reciprocal Rank Fusion)**: 融合算法。公式 `Score = 1 / (k + Rank)`。它不依赖具体的分数绝对值，只看排名，能完美融合两路截然不同的检索结果。
 
-### 3. Re-ranking (重排序 - 性价比之王)
+### 3. Re-ranking (重排序)
+**类比**：
+*   **检索 (Retrieval)** 是"海选"：从 100万个文档里快速捞出 Top 50，速度快，但不够准。
+*   **重排序 (Re-ranking)** 是"面试"：用更精细的模型（Cross-Encoder）把这 50 个文档逐字细读，重新打分，选出 Top 5。
 
-**原理**：先用检索器快速捞出 Top-50 个粗略相关的文档，然后用一个精读模型（Cross-Encoder，如 `bge-reranker-v2-m3`）对这 50 个文档与 Query 进行逐一深度比对，重新打分，只取 Top-5 给 LLM。
-**效果**：通常能带来 10-20% 的准确率提升（MRR@10）。
+> ✅ **经验值**：加上 Re-ranking 通常能带来 **10%-20%** 的准确率提升（MRR指标）。
 
 ---
 
-## Part 4: The Agentic Revolution: RAG 2.0 (智能进化)
+## Part 4: From Chain to Graph (Agentic RAG)
 
-当简单的线性流程无法满足复杂需求时，我们需要引入 **Agent (智能体)**。这就是 **Agentic RAG**。
+传统的 LangChain 是**流水线工** (A -> B -> C)，不管中间哪一步错了，只能硬着头皮往下走。
+LangGraph 是**智能管理者**，基于**状态机 (State Machine)**，可以循环、重试、纠错。
 
-### 核心架构：Reactive RAG (Self-Reflection)
+### 核心架构：Self-Correcting RAG
+我们不看代码，看逻辑流转：
 
-我们使用 **LangGraph** 构建一个具备**自我纠错**能力的闭环系统。
-
-#### LangGraph 实现全览
-
-```python
-from langgraph.graph import END, StateGraph
-from typing import TypedDict, List
-from langchain_core.messages import BaseMessage
-
-class GraphState(TypedDict):
-    question: str
-    generation: str
-    documents: List[str]
-    rewrite_count: int  # 防止死循环
-
-# --- Nodes ---
-
-def retrieve(state):
-    print("---RETRIEVE---")
-    question = state["question"]
-    docs = retriever.invoke(question)
-    return {"documents": docs, "question": question}
-
-def grade_documents(state):
-    print("---CHECK RELEVANCE---")
-    question = state["question"]
-    documents = state["documents"]
+```mermaid
+graph TD
+    Start([用户提问]) --> Retrieve[检索文档]
+    Retrieve --> Grade{LLM评分: 文档相关吗?}
     
-    # 使用 LLM 作为一个 Grader 打分器
-    filtered_docs = []
-    web_search = "No"
-    for d in documents:
-        score = grader_llm.invoke({"question": question, "context": d.page_content})
-        if score.binary_score == "yes":
-            filtered_docs.append(d)
-        else:
-            continue
-            
-    # 如果没有文档相关，标记需要搜索或重写
-    if not filtered_docs:
-        web_search = "Yes"
-        
-    return {"documents": filtered_docs, "web_search": web_search}
-
-def generate(state):
-    print("---GENERATE---")
-    # ... RAG 生成逻辑 ...
-    return {"generation": generation}
-
-def rewrite_query(state):
-    print("---REWRITE QUERY---")
-    question = state["question"]
-    # LLM 生成更好的 Query
-    better_question = rewriter_llm.invoke({"question": question})
-    return {"question": better_question}
-
-# --- Conditional Edges ---
-
-def decide_to_generate(state):
-    print("---DECIDE TO GENERATE---")
-    # 如果没有有效文档，去重写查询
-    if state["web_search"] == "Yes":
-        print("---DECISION: REWRITE QUERY---")
-        return "rewrite_query"
-    else:
-        print("---DECISION: GENERATE---")
-        return "generate"
-
-# --- Graph ---
-workflow = StateGraph(GraphState)
-
-workflow.add_node("retrieve", retrieve)
-workflow.add_node("grade_documents", grade_documents)
-workflow.add_node("generate", generate)
-workflow.add_node("rewrite_query", rewrite_query)
-
-workflow.set_entry_point("retrieve")
-workflow.add_edge("retrieve", "grade_documents")
-
-# 关键的条件分支
-workflow.add_conditional_edges(
-    "grade_documents",
-    decide_to_generate,
-    {
-        "rewrite_query": "rewrite_query",
-        "generate": "generate",
-    },
-)
-workflow.add_edge("rewrite_query", "retrieve") # 闭环：重写后再去检索
-workflow.add_edge("generate", END)
-
-app = workflow.compile()
+    Grade -- No (不相关) --> Rewrite[LLM重写查询]
+    Rewrite --> Retrieve
+    
+    Grade -- Yes (相关) --> Generate[生成回答]
+    Generate --> Check{LLM检查: 有幻觉吗?}
+    
+    Check -- Yes (有幻觉) --> Generate
+    Check -- No (通过) --> End([结束])
 ```
 
----
-
-## Part 5: Security, Review & Optimization (生产级保障)
-
-这是大多数 Demo 不会告诉你的部分。
-
-### 1. Data Security & Permissions (数据安全与权限)
-企业内部数据往往有权限控制（ACL）。
-*   **Metadata Filtering (元数据过滤)**: 必须在向量库层面做强隔离。
-    *   **错误做法**: 检索出 Top-10，然后在内存里过滤掉用户无权查看的。这会导致召回数量不足。
-    *   **正确做法**: Pre-filtering。`vectorstore.similarity_search(filter={"user_id": "123", "dept": "HR"})`。
-*   **PII Masking**: 上传到公有云 LLM 前，必须使用工具（如 Microsoft Presidio）对敏感信息（身份证、电话）进行脱敏。
-
-### 2. Semantic Caching (语义缓存)
-不要为相同的问题重复付费。
-*   简单的 KV 缓存无法处理 "查一下苹果股价" 和 "帮我看下 Apple 的股价"。
-*   使用 **GPTCache** 或 **Redis Semantic Cache**。先计算 Query 的向量，如果在缓存中找到相似度 > 0.95 的历史 Query，直接返回历史答案。
-
-### 3. "Lost in the Middle" (迷失在中间)
-LLM 对 Prompt 开头和结尾的注意力最强。
-**解法**：在 Re-ranking 后，手动调整文档顺序，将相关性分值最高的文档放在 Prompt 的开头和结尾（两头高，中间低）。
+**设计思想：**
+1.  **闭环 (Loop)**: 检索不到不立刻放弃，而是尝试换个说法（Rewrite）再搜一次。
+2.  **自我反思 (Reflection)**: 每一步都有一个裁判（Grader）在检查质量。
 
 ---
 
-## Part 6: Evaluation & Observability (评估与观测)
+## Part 5: Production Pitfalls (踩坑实录)
 
-没有评估，优化就是盲人摸象。
+### 1. 安全：Metadata Filtering (血泪教训)
+> **🚑 真实事故**：某 HR 系统。用户问"查一下张三的工资"。Naive RAG 检索出了所有包含"张三"和"工资"的文档。虽然 UI 上没显示，但 API 返回的 Context 里包含了 CEO 的工资单。
+>
+> **正确做法**：**Pre-filtering (预过滤)**。
+> 在检索**发生之前**，这就应该被拦截。
+> `search(query, filter={"department": "user_dept"})`。**千万不要**先把数据捞出来再在内存里过滤！
 
-### 1. Ragas (The RAG Triad)
-*   **Context Precision**: 检索回来的包含了多少正确信息？(Retriever Quality)
-*   **Faithfulness**: 回答是否忠实于检索到的上下文？(Hallucination Check)
-*   **Answer Relevance**: 回答是否解决了用户问题？(End-to-end Quality)
-
-### 2. Tracing (全链路追踪)
-在生产环境，你必须知道每一个 Request 的完整生命周期。
-*   **LangSmith**: 官方亲儿子，可视化极佳。
-*   **LangFuse**: 开源替代方案，支持 Self-host。
+### 2. 成本：Semantic Cache
+LLM 的 Token 很贵，向量数据库的查询也耗 CPU。
+*   **问题**：用户问 "How to reset password" 和 "Reset pwd guide" 其实是一回事。
+*   **解法**：**语义缓存**。
+    如果当前问题的向量与历史问题的向量相似度 > 0.95，直接返回缓存的历史答案。既从 3秒 变成 0.1秒，又省了钱。
 
 ---
 
-## Conclusion
+## Part 6: Evaluation (如何评估)
 
-构建一个 Demo 级别的 RAG (Index -> Retrieve -> Generage) 只需要 10 分钟，但构建一个工业级的 RAG 系统需要通过 **Hybrid Search + Re-ranking** 保证召回，通过 **Agentic Loop** 保证鲁棒性，并通过完善的 **ACL 与 Evaluation** 体系保证安全与质量。
+没有评估的 RAG 就是在"盲改"。
 
-**核心 Takeaway：**
-1.  **数据治理**：Parent Document Retriever 和 ColBERT 是进阶利器。
-2.  **查询优化**：Query Rewriting/HyDE 比单纯换模型更有效。
-3.  **架构进化**：从线性 Chain 转向环状 Graph (LangGraph)。
-4.  **基建保障**：必须实施 Metadata Filtering 和 Semantic Caching。
+**DeepDive 指标解读指南：**
+
+| 指标 | 出现低分意味着什么？ | 如何改进？ |
+| :--- | :--- | :--- |
+| **Context Precision** (查准率) | **检索器太烂**，混入了大量无关噪音。 | 优化 Chunking，上 Re-ranking。 |
+| **Context Recall** (查全率) | **漏掉了关键信息**。 | 增大 Top-K，尝试 Hybrid Search。 |
+| **Faithfulness** (忠实度) | **LLM 在胡编乱造**，没利用 Context。 | 调整 Prompt，强调"仅根据上下文回答"。 |
+| **Answer Relevance** | **答非所问**。 | 可能是 Query 理解错了，尝试 Query Rewriting。 |
+
+---
+
+## Conclusion: 实施路线图
+
+从 0 到 1 建设工业级 RAG，建议分四步走：
+
+1.  **MVP 阶段**: Naive RAG。跑通流程，验证数据价值。
+2.  **优化阶段**: 引入 **Hybrid Search + Re-ranking**。解决"搜不准"的核心痛点。
+3.  **成熟阶段**: 引入 **LangGraph + Evaluation**。建立自动化评估体系，引入 Agent 自我纠错。
+4.  **生产阶段**: 完善 **Security (ACL) + Caching**。关注性能、成本与合规。
+
+---
+
+## Glossary (术语表)
+
+| 缩写 | 全称 | 解释 |
+| :--- | :--- | :--- |
+| **RAG** | Retrieval-Augmented Generation | 检索增强生成。通过外挂知识库让 LLM 获得实时信息。 |
+| **HyDE** | Hypothetical Document Embeddings | 假设性文档嵌入。先生成假答案，再用假答案去检索真文档。 |
+| **RRF** | Reciprocal Rank Fusion | 倒数排名融合。一种将多个检索结果列表（如 Keyword + Vector）合并排序的算法。 |
+| **ColBERT** | Contextualized Late Interaction over BERT | 基于 BERT 的晚期交互模型。通过保留 Token 级别向量来实现超高精度的检索。 |
+| **ACL** | Access Control List | 访问控制列表。用于控制用户对数据的访问权限。 |
+| **PII** | Personally Identifiable Information | 个人敏感信息（如身份证、手机号），需在 RAG 流程中脱敏。 |
+
+## References (参考资料)
+
+*   [LangChain Documentation](https://python.langchain.com/docs/get_started/introduction)
+*   [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+*   [Ragas Evaluation Framework](https://docs.ragas.io/en/latest/)
+*   [ColBERT Paper](https://arxiv.org/abs/2004.12832)
+*   [HyDE Paper](https://arxiv.org/abs/2212.10496)
+
+---
 
 希望这篇文章能帮助你在构建 RAG 系统的道路上少走弯路！Happy Coding! 🚀
