@@ -2,11 +2,9 @@
 title: "Dissociation: Chapter 2"
 date: 2025-12-25 22:00:00 +0800
 categories:
-  - Dissociation
   - psychology
 tags:
   - Dissociation
-  - psychology
 ---
 
 

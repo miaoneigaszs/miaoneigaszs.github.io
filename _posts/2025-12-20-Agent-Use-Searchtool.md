@@ -2,7 +2,7 @@
 title: Agent Using Search Tool
 
 categories:
-  - Simple Agent
+  - Technology
 tags:
   - Simple Agent
 ---

@@ -2,7 +2,7 @@
 title: "AI Blog Search - 基于 LangGraph 的自适应 RAG 系统（上）"
 
 categories:
-  - RAG
+  - Technology
 tags:
   - LangGraph
   - RAG

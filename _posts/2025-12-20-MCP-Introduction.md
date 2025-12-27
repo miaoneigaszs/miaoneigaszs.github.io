@@ -1,7 +1,7 @@
 ---
 title: "MCP Introduction"
 categories:
-  - MCP
+  - Technology
 tags:
   - MCP
 date: 2025-12-20 12:00:00 +0800

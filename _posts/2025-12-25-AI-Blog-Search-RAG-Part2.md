@@ -2,7 +2,7 @@
 title: "AI Blog Search - 深入代码实现与优化（下）"
 
 categories:
-  - RAG
+  - Technology
 tags:
   - LangGraph
   - RAG

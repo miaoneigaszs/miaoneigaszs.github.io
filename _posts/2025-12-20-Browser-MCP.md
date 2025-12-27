@@ -2,7 +2,7 @@
 title: "实战：搭建基于 MCP 的浏览器 Agent"
 date: 2025-12-20
 categories:
-  - MCP
+  - Technology
 tags:
   - MCP
   - Browser

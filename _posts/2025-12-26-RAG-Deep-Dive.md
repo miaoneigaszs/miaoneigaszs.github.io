@@ -2,13 +2,10 @@
 title: "From Zero to Hero: A Deep Dive into Industrial RAG Architectures"
 date: 2025-12-26 23:20:00 +0800
 categories:
-  - Technical
-  - AI
+  - Technology
 tags:
   - RAG
-  - LLM
-  - Architecture
-  - LangGraph
+  - Summary
 ---
 
 在大模型（LLM）应用爆发的今天，**[RAG](#term-rag) (Retrieval-Augmented Generation，检索增强生成)** 已经从一个新颖的概念变成了企业级 AI 应用的标配。

@@ -1,11 +1,9 @@
 ---
 title: "Dissociation: Chapter 1"
 categories:
-  - Dissociation
   - psychology
 tags:
   - Dissociation
-  - psychology
 toc: true
 toc_sticky: true
 toc_label: "目录"
