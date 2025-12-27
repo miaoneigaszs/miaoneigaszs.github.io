@@ -124,13 +124,7 @@ qa_chain = RetrievalQA.from_chain_type(llm=ChatOpenAI(), retriever=vectorstore.a
     *   **流程**：`1. 2023营收是多少?` -> `2. 2024营收是多少?` -> `3. 对比两者`。**单步检索永远比混合检索准。**
 
     **HyDE 工作原理流程：**
-```mermaid
-graph LR
-    A[用户问题: 苹果最新财报如何?] --> B(LLM 生成假设答案)
-    B --> C[假设答案: 苹果2024Q3营收达到xxx亿...]
-    C --> D{用假设答案去检索}
-    D -- Vector Search --> E[命中真实的财报文档]
-```
+[![hyde](/assets/images/hyde.png)](/assets/images/hyde.png)
 > **核心逻辑**：在向量空间中，"答案"和"标准答案"的相似度，远高于"问题"和"标准答案"的相似度。
 
 ### 2. Hybrid Search (混合检索)
@@ -161,22 +155,7 @@ LangGraph 是**智能管理者**，基于**状态机 (State Machine)**，可以�
 ### 核心架构：Self-Correcting RAG
 我们不看代码，看逻辑流转：
 
-```mermaid
-graph TD
-    Start([用户提问]) --> Retrieve[检索文档]
-    Retrieve --> Grade{LLM评分: 文档相关吗?}
-    
-    Grade -- No --> CheckLoop{重试 > 3次?}
-    CheckLoop -- Yes --> GiveUp([回复: 找不到资料])
-    CheckLoop -- No --> Rewrite[LLM重写查询]
-    Rewrite --> Retrieve
-    
-    Grade -- Yes --> Generate[生成回答]
-    Generate --> Check{LLM检查: 有幻觉吗?}
-    
-    Check -- Yes (有幻觉) --> Generate
-    Check -- No (通过) --> End([结束])
-```
+[![self-correcting](/assets/images/self-correcting.png)](/assets/images/self-correcting.png)
 
 **设计思想：**
 1.  **闭环 (Loop)**: 检索不到不立刻放弃，而是尝试换个说法（Rewrite）再搜一次。
