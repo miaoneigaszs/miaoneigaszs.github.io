@@ -155,7 +155,7 @@ LangGraph 是**智能管理者**，基于**状态机 (State Machine)**，可以�
 ### 核心架构：Self-Correcting RAG
 我们不看代码，看逻辑流转：
 
-[![self-correcting](/assets/images/self-correcting.png)](/assets/images/self-correcting.png)
+[![self-correcting](/assets/images/Self-Correcting%20RAG.png)](/assets/images/Self-Correcting%20RAG.png)
 
 **设计思想：**
 1.  **闭环 (Loop)**: 检索不到不立刻放弃，而是尝试换个说法（Rewrite）再搜一次。
